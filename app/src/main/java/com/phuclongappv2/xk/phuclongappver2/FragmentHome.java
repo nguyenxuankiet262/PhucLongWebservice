@@ -48,9 +48,6 @@ public class FragmentHome extends Fragment {
     //Slider
     SliderLayout sliderLayout;
 
-    //Category
-    List<Category> categoryArrayList;
-
     //Adapter
     CategoryAdapter adapter;
 
@@ -79,18 +76,13 @@ public class FragmentHome extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mService = Common.getAPI();
 
-        categoryArrayList = new ArrayList<>();
-
         toolbar = view.findViewById(R.id.main_tool_bar);
-//        list_menu = view.findViewById(R.id.list_category);
-//        list_menu.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-//        list_menu.setHasFixedSize(true);
-//        list_menu.setNestedScrollingEnabled(false);
+        list_menu = view.findViewById(R.id.list_category);
+        list_menu.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        list_menu.setHasFixedSize(true);
+        list_menu.setNestedScrollingEnabled(false);
 
-        //Set adapter
-        //adapter = new CategoryAdapter(getActivity(), categoryArrayList);
-        //loadMenu();
-        //list_menu.setAdapter(adapter);
+        loadMenu();
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Phúc Long");
@@ -134,7 +126,20 @@ public class FragmentHome extends Fragment {
     }
 
     private void loadMenu() {
+        compositeDisposable.add(mService.getCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Category>>() {
+                    @Override
+                    public void accept(List<Category> categories) throws Exception {
+                        displayCategory(categories);
+                    }
+                }));
+    }
 
+    private void displayCategory(List<Category> categories) {
+        adapter = new CategoryAdapter(getActivity(), categories);
+        list_menu.setAdapter(adapter);
     }
 
 

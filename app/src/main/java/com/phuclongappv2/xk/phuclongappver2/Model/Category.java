@@ -2,7 +2,7 @@ package com.phuclongappv2.xk.phuclongappver2.Model;
 
 public class Category {
 
-    private String Id;
+    private String ID;
     private String Image;
     private String Name;
 
@@ -10,18 +10,18 @@ public class Category {
 
     }
 
-    public Category(String id,String image, String name) {
-        Id = id;
+    public Category(String ID, String image, String name) {
+        this.ID = ID;
         Image = image;
         Name = name;
     }
 
-    public String getId() {
-        return Id;
+    public String getID() {
+        return ID;
     }
 
-    public void setId(String id) {
-        Id = id;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getImage() {

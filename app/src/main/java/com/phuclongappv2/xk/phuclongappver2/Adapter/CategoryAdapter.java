@@ -3,8 +3,6 @@ package com.phuclongappv2.xk.phuclongappver2.Adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +57,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
             public void onClick(View v, int position) {
                 //Toast.makeText(context,""+holder.name_product.getText().toString(),Toast.LENGTH_SHORT).show();
                 //Intent intent = new Intent(context, DrinkFragment.class);
-                String index = categories.get(position).getId();
+                //String index = categories.get(position).getId();
                 //intent.putExtra("CategoryId", index);
                 //intent.putExtra("CategoryName",categories.get(position).getName());
                 //context.startActivity(intent);
