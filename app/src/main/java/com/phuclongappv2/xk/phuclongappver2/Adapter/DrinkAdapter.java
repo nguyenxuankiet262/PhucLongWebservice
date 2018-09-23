@@ -21,7 +21,9 @@ import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
+import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
+import com.phuclongappv2.xk.phuclongappver2.Interface.ItemClickListener;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
 import com.phuclongappv2.xk.phuclongappver2.R;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
@@ -109,6 +111,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
             holder.image_product.setImageResource(R.drawable.thumb_default);
         }
         //Khởi tạo price
+        price = drinkList.get(position).getPrice();
         holder.price_drink.setText(Common.ConvertIntToMoney(drinkList.get(position).getPrice()));
         holder.name_drink.setText(drinkList.get(position).getName());
 
@@ -127,6 +130,140 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                 else{
                     ShowLoginPopup();
                 }
+            }
+        });
+        holder.share_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Common.CurrentUser != null){
+
+                }
+                else {
+                    ShowLoginPopup();
+                }
+            }
+        });
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View v, final int position) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setCancelable(true);
+                View itemView = LayoutInflater.from(context).inflate(R.layout.popup_drink_detail, null);
+                //Ánh xạ
+
+                rating_btn = itemView.findViewById(R.id.btn_rating);
+                ratingBar = itemView.findViewById(R.id.rating_bar);
+                image_banner = itemView.findViewById(R.id.image_detail_drink);
+                image_cold = itemView.findViewById(R.id.cold_drink_image);
+                image_hot = itemView.findViewById(R.id.hot_drink_image);
+
+                drinkname = itemView.findViewById(R.id.drink_name);
+                drinkprice = itemView.findViewById(R.id.drink_price);
+
+                cart_btn = itemView.findViewById(R.id.btn_cart);
+                numberButton = itemView.findViewById(R.id.elegant_btn);
+                loadDrinkDetail(drinkList.get(position));
+
+                builder.setView(itemView);
+                final AlertDialog alertDialog = builder.show();
+                //Click rating button
+                rating_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.hide();
+                        //showDialogRating();
+                    }
+                });
+                cart_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Common.cartRepository.isCart(Integer.parseInt(drinkList.get(position).getID())) != 1) {
+                            alertDialog.dismiss();
+                            //Create DB
+                            Cart cartItem = new Cart();
+                            if(Common.CurrentUser != null) {
+                                cartItem.uId = Common.CurrentUser.getId();
+                            }
+                            cartItem.cId = Integer.parseInt(drinkList.get(position).getID());
+                            cartItem.cName = drinkList.get(position).getName();
+                            cartItem.cQuanity = Integer.parseInt(numberButton.getNumber());
+                            cartItem.cPrice = price;
+                            cartItem.cStatus = status;
+                            cartItem.cImageCold = drinkList.get(position).getImageCold();
+                            cartItem.cImageHot = drinkList.get(position).getImageHot();
+                            cartItem.cPriceItem = drinkList.get(position).getPrice();
+                            //Add to DB
+                            Common.cartRepository.insertCart(cartItem);
+                            Toast.makeText(context, "Đã thêm " + numberButton.getNumber() + " " + drinkList.get(position).getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        } else {
+                            alertDialog.dismiss();
+                            Toast.makeText(context, "Sản phẩm đã có trong giỏ hàng!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void loadDrinkDetail(final Drink drink) {
+        if (!drink.getImageCold().equals("empty")) {
+            Picasso picasso = Picasso.with(context);
+            picasso.setIndicatorsEnabled(false);
+            picasso.load(drink.getImageCold()).networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(image_banner, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso picasso = Picasso.with(context);
+                            picasso.setIndicatorsEnabled(false);
+                            picasso.load(drink.getImageCold()).into(image_banner);
+                        }
+                    });
+            status = "cold";
+        } else if (!drink.getImageHot().equals("empty")) {
+            Picasso picasso = Picasso.with(context);
+            picasso.setIndicatorsEnabled(false);
+            picasso.load(drink.getImageHot()).networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(image_banner, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso picasso = Picasso.with(context);
+                            picasso.setIndicatorsEnabled(false);
+                            picasso.load(drink.getImageHot()).into(image_banner);
+                        }
+                    });
+            status = "hot";
+        } else {
+            image_banner.setImageResource(R.drawable.thumb_default);
+            status = "empty";
+        }
+        drinkname.setText(drink.getName().toString());
+        drinkprice.setText(Common.ConvertIntToMoney(drink.getPrice()));
+        if (drink.getImageCold().equals("empty")) {
+            image_cold.setVisibility(View.INVISIBLE);
+        }
+        if (drink.getImageHot().equals("empty")) {
+            image_hot.setVisibility(View.INVISIBLE);
+        }
+        if (drink.getImageHot().equals("empty") && drink.getImageCold().equals("empty")) {
+            image_hot.setVisibility(View.INVISIBLE);
+            image_cold.setVisibility(View.INVISIBLE);
+        }
+        numberButton.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+            @Override
+            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                price = drink.getPrice() * Integer.parseInt(numberButton.getNumber());
+                //Toast.makeText(context,price,Toast.LENGTH_SHORT).show();
+                drinkprice.setText(NumberFormat.getNumberInstance(Locale.US).format(price) + " VNĐ");
             }
         });
     }

@@ -39,13 +39,13 @@ public class CartRepository implements ICartDataSource {
 
 
     @Override
-    public int isCart(int itemId, String userId) {
-        return iCartDataSource.isCart(itemId, userId);
+    public int isCart(int itemId) {
+        return iCartDataSource.isCart(itemId);
     }
 
     @Override
-    public int countCartItem(String userId) {
-        return iCartDataSource.countCartItem(userId);
+    public int countCartItem() {
+        return iCartDataSource.countCartItem();
     }
 
 

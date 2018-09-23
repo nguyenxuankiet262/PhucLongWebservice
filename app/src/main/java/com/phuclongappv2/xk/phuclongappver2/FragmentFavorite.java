@@ -33,7 +33,7 @@ public class FragmentFavorite extends Fragment {
 
     private RecyclerView list_fav;
     FrameLayout favLayout;
-    RelativeLayout emptyLayout;
+    RelativeLayout emptyLayout, loginLayout;
     CoordinatorLayout existLayout;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -53,6 +53,7 @@ public class FragmentFavorite extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         emptyLayout = view.findViewById(R.id.empty_fav_layout);
+        loginLayout = view.findViewById(R.id.login_fav_layout);
         Common.parentFavLayout = view.findViewById(R.id.myCoordinatorLayout);
         list_fav = view.findViewById(R.id.list_favorite);
         list_fav.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -60,11 +61,12 @@ public class FragmentFavorite extends Fragment {
         favLayout = view.findViewById(R.id.fav_layout);
         existLayout = view.findViewById(R.id.myCoordinatorLayout);
         if(Common.CurrentUser != null) {
+            loginLayout.setVisibility(View.GONE);
             loadFavItem();
         }
         else{
             existLayout.setVisibility(View.GONE);
-            //emptyLayout.setVisibility(View.GONE);
+            emptyLayout.setVisibility(View.GONE);
         }
     }
 

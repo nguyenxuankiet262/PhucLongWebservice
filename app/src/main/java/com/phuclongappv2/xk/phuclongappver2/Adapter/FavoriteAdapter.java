@@ -170,7 +170,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Common.cartRepository.isCart(favoriteList.get(position).fId, Common.CurrentUser.getId()) != 1) {
+                if (Common.cartRepository.isCart(favoriteList.get(position).fId) != 1) {
                     alertDialog.dismiss();
                     //Create DB
                     Cart cartItem = new Cart();

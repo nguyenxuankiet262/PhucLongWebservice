@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.kofigyan.stateprogressbar:stateprogressbar:1.0.0'
+    implementation 'com.github.jd-alexander:android-flat-button:v1.1'
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'

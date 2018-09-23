@@ -12,8 +12,8 @@ import java.util.List;
 
 @Dao
 public interface CartDAO {
-    @Query("SELECT EXISTS(SELECT 1 FROM Cart WHERE id=:itemId AND idUser=:userId)")
-    int isCart(int itemId, String userId);
+    @Query("SELECT EXISTS(SELECT 1 FROM Cart WHERE id=:itemId)")
+    int isCart(int itemId);
 
     @Query("SELECT * FROM Cart")
     List<Cart> getCartItems();
@@ -24,8 +24,8 @@ public interface CartDAO {
     @Query("SELECT * FROM Cart WHERE idUser = :userID")
     List<Cart> getCartByUserId(String userID);
 
-    @Query("SELECT COUNT(*) FROM Cart WHERE idUser=:userID")
-    int countCartItem(String userID);
+    @Query("SELECT COUNT(*) FROM Cart")
+    int countCartItem();
 
     @Insert
     void insertCart(Cart... carts);

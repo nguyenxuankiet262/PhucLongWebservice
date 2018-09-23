@@ -12,6 +12,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_api_key" />
+
         <activity android:name=".ActivityStart">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,9 @@
         </activity>
         <activity
             android:name=".ActivityMain"
-            android:theme="@style/MyTheme.TranslucentNavigation"/>
+            android:theme="@style/MyTheme.TranslucentNavigation" />
+        <activity android:name=".ActivityCart"
+            android:parentActivityName=".ActivityMain"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.phuclongappv2.xk.phuclongappver2;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -24,6 +26,7 @@ import com.daimajia.slider.library.SliderLayout;
 
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.nex3z.notificationbadge.NotificationBadge;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.CategoryAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Model.Banner;
 import com.phuclongappv2.xk.phuclongappver2.Model.Category;
@@ -44,6 +47,9 @@ public class FragmentHome extends Fragment {
 
     private Toolbar toolbar;
     private RecyclerView list_menu;
+    //Notification
+    NotificationBadge badge;
+    ImageView cartBtn;
 
     //Slider
     SliderLayout sliderLayout;
@@ -153,12 +159,38 @@ public class FragmentHome extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main_toolbar, menu);
         MenuItem user_item = menu.findItem(R.id.icon_account);
+        View view = menu.findItem(R.id.icon_cart_menu).getActionView();
         if(Common.CurrentUser == null) {
             user_item.setVisible(false);
         }
         else{
             user_item.setVisible(true);
         }
+        badge = view.findViewById(R.id.badge);
+        cartBtn = view.findViewById(R.id.cart_icon);
+        cartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cartIntent = new Intent(getActivity(), ActivityCart.class);
+                startActivity(cartIntent);
+            }
+        });
+        updateCartCount();
+    }
+
+    private void updateCartCount() {
+        if (badge == null) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (Common.cartRepository.countCartItem() == 0)
+                    badge.setVisibility(View.INVISIBLE);
+                else {
+                    badge.setVisibility(View.VISIBLE);
+                    badge.setText(String.valueOf(Common.cartRepository.countCartItem()));
+                }
+            }
+        });
     }
 
     @Override
@@ -175,5 +207,11 @@ public class FragmentHome extends Fragment {
     public void onDestroy() {
         compositeDisposable.dispose();
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateCartCount();
     }
 }

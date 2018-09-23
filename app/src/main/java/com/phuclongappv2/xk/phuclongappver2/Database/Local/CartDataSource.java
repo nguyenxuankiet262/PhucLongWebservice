@@ -21,8 +21,8 @@ public class CartDataSource implements ICartDataSource {
     }
 
     @Override
-    public int isCart(int itemId, String userId) {
-        return cartDAO.isCart(itemId, userId);
+    public int isCart(int itemId) {
+        return cartDAO.isCart(itemId);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class CartDataSource implements ICartDataSource {
     }
 
     @Override
-    public int countCartItem(String userID) {
-        return cartDAO.countCartItem(userID);
+    public int countCartItem() {
+        return cartDAO.countCartItem();
     }
 
     @Override
