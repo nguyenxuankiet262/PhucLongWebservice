@@ -14,6 +14,7 @@ import com.phuclongappv2.xk.phuclongappver2.FragmentDrink;
 import com.phuclongappv2.xk.phuclongappver2.Interface.ItemClickListener;
 import com.phuclongappv2.xk.phuclongappver2.Model.Category;
 import com.phuclongappv2.xk.phuclongappver2.R;
+import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
 import com.phuclongappv2.xk.phuclongappver2.ViewHolder.CategoryViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -71,6 +72,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
                 drinkActivity.setArguments(bundle);
                 FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.main_fragment, drinkActivity, "DrinkFragment").addToBackStack(null).commit();
+                Common.BackPressA++;
             }
         });
     }

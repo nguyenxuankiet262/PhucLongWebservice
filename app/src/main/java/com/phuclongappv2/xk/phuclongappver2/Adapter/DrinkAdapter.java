@@ -2,6 +2,7 @@ package com.phuclongappv2.xk.phuclongappver2.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
+import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
 import com.phuclongappv2.xk.phuclongappver2.R;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
@@ -109,6 +111,60 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         //Khởi tạo price
         holder.price_drink.setText(Common.ConvertIntToMoney(drinkList.get(position).getPrice()));
         holder.name_drink.setText(drinkList.get(position).getName());
+
+        holder.fav_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Common.CurrentUser != null) {
+                    if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).getID()), Common.CurrentUser.getId()) != 1) {
+                        AddOrRemoveFavorite(drinkList.get(position), true);
+                        holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
+                    } else {
+                        AddOrRemoveFavorite(drinkList.get(position), false);
+                        holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
+                    }
+                }
+                else{
+                    ShowLoginPopup();
+                }
+            }
+        });
+    }
+
+    private void ShowLoginPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Bạn có muốn đăng nhập không?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Không", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("Chấp nhận", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void AddOrRemoveFavorite(Drink drink, boolean isAdd) {
+        Favorite favorite = new Favorite();
+        favorite.uId = Common.CurrentUser.getId();
+        favorite.fId = Integer.parseInt(drink.getID());
+        favorite.fName = drink.getName();
+        favorite.fImageCold = drink.getImageCold();
+        favorite.fImageHot = drink.getImageHot();
+        favorite.fPrice = drink.getPrice();
+        favorite.fMenu = drink.getCategoryID();
+        if (isAdd) {
+            Common.favoriteRepository.insertCart(favorite);
+        } else {
+            Common.favoriteRepository.deleteFavItem(favorite);
+        }
     }
 
 

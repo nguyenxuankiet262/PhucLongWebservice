@@ -152,6 +152,13 @@ public class FragmentHome extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main_toolbar, menu);
+        MenuItem user_item = menu.findItem(R.id.icon_account);
+        if(Common.CurrentUser == null) {
+            user_item.setVisible(false);
+        }
+        else{
+            user_item.setVisible(true);
+        }
     }
 
     @Override

@@ -56,6 +56,8 @@ public class FragmentDrink extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Common.BackPressA = 1;
+        Common.checkDrinkFragmentOpen = true;
         setHasOptionsMenu(true);
     }
 
@@ -64,6 +66,14 @@ public class FragmentDrink extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mService = Common.getAPI();
+
+        toolbar = view.findViewById(R.id.tool_bar_drink_menu);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         list_drink = view.findViewById(R.id.listDrink);
         list_drink.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
@@ -84,7 +94,7 @@ public class FragmentDrink extends Fragment {
         loadDrink(id_cate);
     }
 
-    private void loadDrink(String id_cate) {
+    public void loadDrink(String id_cate) {
         compositeDisposable.add(mService.getDrink(id_cate)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -100,4 +110,9 @@ public class FragmentDrink extends Fragment {
         list_drink.setAdapter(adapter);
     }
 
+    @Override
+    public void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
+    }
 }

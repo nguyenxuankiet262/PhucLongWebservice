@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="200dp"
+    android:layout_height="280dp"
+    android:id="@+id/tabLayout"
+    android:background="#000000ff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn loại thức uống"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:weightSum="2">
+            <ImageView
+                android:layout_weight="1"
+                android:id="@+id/cold_drink_fav_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ico_cold" />
+
+            <ImageView
+                android:layout_weight="1"
+                android:id="@+id/hot_drink_fav_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ico_hot" />
+        </LinearLayout>
+
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:id="@+id/elegant_fav_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_rounded_corners"
+
+            app:backGroundColor="@android:color/transparent"
+            app:finalNumber="10"
+            app:initialNumber="1">
+
+        </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_ripple"
+            android:layout_alignParentBottom="true"
+            android:text="Cancle"
+            android:id="@+id/cancel_add_cart"
+            android:textColor="@color/colorCancel"
+            android:layout_alignParentEnd="true"/>
+        <Button
+            android:id="@+id/accept_add_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_ripple"
+            android:layout_alignParentBottom="true"
+            android:text="Chấp nhận"
+            android:textColor="@color/colorOpenStore"
+            android:layout_alignParentEnd="true"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

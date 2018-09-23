@@ -3,15 +3,37 @@ package com.phuclongappv2.xk.phuclongappver2.Utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
 
+import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.CartRepository;
+import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.FavoriteRepository;
+import com.phuclongappv2.xk.phuclongappver2.Database.Local.DrinkRoomDatabase;
+import com.phuclongappv2.xk.phuclongappver2.Model.Coordinates;
+import com.phuclongappv2.xk.phuclongappver2.Model.User;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.RetrofitClient;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Map;
 
 public class Common {
     private static final String BASE_URL = "http://10.0.2.2/phuclong/";
+
+    public static User CurrentUser;
+
+    public static DrinkRoomDatabase drinkroomDatabase;
+    public static CartRepository cartRepository;
+    public static FavoriteRepository favoriteRepository;
+
+    public static int BackPressA = 0;
+    public static int BackPressB = 0;
+    public static int checkPosision = 1;
+
+    public static View parentFavLayout;
+    public static boolean checkDrinkFragmentOpen;
+
+    public static Map<String,Coordinates> coordinatesStringMap;
 
     public static IPhucLongAPI getAPI(){
         return RetrofitClient.getClient(BASE_URL).create(IPhucLongAPI.class);
@@ -69,5 +91,8 @@ public class Common {
 
     public static String ConvertIntToMoney(int money){
         return NumberFormat.getNumberInstance(Locale.US).format(money) + " VNĐ";
+    }
+    public static double ConvertStringToDouble(String s){
+        return Double.parseDouble(s);
     }
 }
