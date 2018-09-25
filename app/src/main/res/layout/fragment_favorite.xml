@@ -9,9 +9,6 @@
     <include layout="@layout/empty_fav_layout"
         android:id="@+id/empty_fav_layout">
     </include>
-    <include layout="@layout/login_fav_layout"
-        android:id="@+id/login_fav_layout">
-    </include>
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

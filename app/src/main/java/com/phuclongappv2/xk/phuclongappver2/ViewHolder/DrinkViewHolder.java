@@ -9,7 +9,7 @@ import com.phuclongappv2.xk.phuclongappver2.Interface.ItemClickListener;
 import com.phuclongappv2.xk.phuclongappver2.R;
 
 public class DrinkViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public ImageView image_product, fav_btn, share_btn;
+    public ImageView image_product, fav_btn, share_btn, cart_btn;
     public TextView name_drink, price_drink;
 
     ItemClickListener itemClickListener;
@@ -20,6 +20,7 @@ public class DrinkViewHolder extends RecyclerView.ViewHolder implements View.OnC
         image_product = itemView.findViewById(R.id.image_drink);
         name_drink = itemView.findViewById(R.id.name_drink);
         price_drink = itemView.findViewById(R.id.price_drink);
+        cart_btn = itemView.findViewById(R.id.cart_btn);
         itemView.setOnClickListener(this);
     }
     public void setItemClickListener(ItemClickListener itemClickListener)

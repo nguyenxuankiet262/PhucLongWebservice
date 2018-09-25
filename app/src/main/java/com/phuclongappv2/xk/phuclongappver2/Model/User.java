@@ -1,42 +1,30 @@
 package com.phuclongappv2.xk.phuclongappver2.Model;
 
 public class User {
-    String id;
+    String phone;
     String name;
     String address;
-    String phone;
-    String image;
-    String password;
-    String email;
+    String birthday;
+    String error_msg;
 
-    public User(){
+    public User() {
 
     }
 
-    public User(String id, String name, String address, String phone, String image, String email, String password) {
-        this.id = id;
+    public User(String phone, String name, String address, String birthday, String error_msg) {
+        this.phone = phone;
         this.name = name;
         this.address = address;
+        this.birthday = birthday;
+        this.error_msg = error_msg;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
         this.phone = phone;
-        this.image = image;
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -55,27 +43,19 @@ public class User {
         this.address = address;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
-    public String getImage() {
-        return image;
+    public String getError_msg() {
+        return error_msg;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setError_msg(String error_msg) {
+        this.error_msg = error_msg;
     }
 }

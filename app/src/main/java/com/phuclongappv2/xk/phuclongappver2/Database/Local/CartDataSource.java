@@ -36,6 +36,11 @@ public class CartDataSource implements ICartDataSource {
     }
 
     @Override
+    public void deleteCartById(int cartItemID) {
+        cartDAO.deleteCartById(cartItemID);
+    }
+
+    @Override
     public List<Cart> getCartByUserId(String userID) {
         return cartDAO.getCartByUserId(userID);
     }

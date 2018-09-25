@@ -8,12 +8,6 @@
         android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="always"
         />
-    <item android:id="@+id/icon_account"
-        android:title="My account"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_account_circle_white_24dp"
-        app:showAsAction="always">
-        </item>
     <item android:id="@+id/icon_cart_menu"
         android:title="Cart"
         android:orderInCategory="100"

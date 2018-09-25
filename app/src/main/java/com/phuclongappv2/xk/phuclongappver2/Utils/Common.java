@@ -20,7 +20,7 @@ import java.util.Map;
 public class Common {
     private static final String BASE_URL = "http://10.0.2.2/phuclong/";
 
-    public static User CurrentUser;
+    public static User CurrentUser = null;
 
     public static DrinkRoomDatabase drinkroomDatabase;
     public static CartRepository cartRepository;

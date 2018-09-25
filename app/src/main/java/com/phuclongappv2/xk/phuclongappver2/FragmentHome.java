@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -158,14 +159,7 @@ public class FragmentHome extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main_toolbar, menu);
-        MenuItem user_item = menu.findItem(R.id.icon_account);
         View view = menu.findItem(R.id.icon_cart_menu).getActionView();
-        if(Common.CurrentUser == null) {
-            user_item.setVisible(false);
-        }
-        else{
-            user_item.setVisible(true);
-        }
         badge = view.findViewById(R.id.badge);
         cartBtn = view.findViewById(R.id.cart_icon);
         cartBtn.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +190,6 @@ public class FragmentHome extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.icon_account:
-                break;
             case R.id.icon_search:
                 break;
         }

@@ -51,6 +51,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_favorite_border_green_24dp" />
+            <ImageView
+                android:id="@+id/cart_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_add_shopping_cart_green_24dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

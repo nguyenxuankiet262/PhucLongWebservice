@@ -1,6 +1,7 @@
 package com.phuclongappv2.xk.phuclongappver2.Adapter;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,8 +23,11 @@ import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
+import com.facebook.accountkit.ui.LoginType;
+import com.phuclongappv2.xk.phuclongappver2.ActivityMain;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
+import com.phuclongappv2.xk.phuclongappver2.FragmentMore;
 import com.phuclongappv2.xk.phuclongappver2.Interface.ItemClickListener;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
 import com.phuclongappv2.xk.phuclongappver2.R;
@@ -110,6 +115,22 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         } else {
             holder.image_product.setImageResource(R.drawable.thumb_default);
         }
+        if(Common.cartRepository.isCart(Integer.parseInt(drinkList.get(position).getID())) != 1) {
+            holder.cart_btn.setImageResource(R.drawable.ic_add_shopping_cart_green_24dp);
+        }
+        else{
+            holder.cart_btn.setImageResource(R.drawable.ic_shopping_cart_green_24dp);
+        }
+        if(Common.CurrentUser != null) {
+            if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).getID()), Common.CurrentUser.getPhone()) == 1) {
+                holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
+            } else {
+                holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
+            }
+        }
+        else{
+            holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
+        }
         //Khởi tạo price
         price = drinkList.get(position).getPrice();
         holder.price_drink.setText(Common.ConvertIntToMoney(drinkList.get(position).getPrice()));
@@ -118,8 +139,8 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         holder.fav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Common.CurrentUser != null) {
-                    if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).getID()), Common.CurrentUser.getId()) != 1) {
+                if(Common.CurrentUser != null){
+                    if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).getID()), Common.CurrentUser.getPhone()) != 1) {
                         AddOrRemoveFavorite(drinkList.get(position), true);
                         holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
                     } else {
@@ -128,18 +149,19 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                     }
                 }
                 else{
-                    ShowLoginPopup();
+                    ((ActivityMain) context).setLoginPage();
                 }
+
             }
         });
         holder.share_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Common.CurrentUser != null){
+                if(Common.CurrentUser != null) {
 
                 }
-                else {
-                    ShowLoginPopup();
+                else{
+                    ((ActivityMain) context).setLoginPage();
                 }
             }
         });
@@ -182,7 +204,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                             //Create DB
                             Cart cartItem = new Cart();
                             if(Common.CurrentUser != null) {
-                                cartItem.uId = Common.CurrentUser.getId();
+                                cartItem.uId = Common.CurrentUser.getPhone();
                             }
                             cartItem.cId = Integer.parseInt(drinkList.get(position).getID());
                             cartItem.cName = drinkList.get(position).getName();
@@ -195,6 +217,8 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                             //Add to DB
                             Common.cartRepository.insertCart(cartItem);
                             Toast.makeText(context, "Đã thêm " + numberButton.getNumber() + " " + drinkList.get(position).getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                            ((ActivityMain) context).updateNotificationHomeIcon();
+                            holder.cart_btn.setImageResource(R.drawable.ic_shopping_cart_green_24dp);
                         } else {
                             alertDialog.dismiss();
                             Toast.makeText(context, "Sản phẩm đã có trong giỏ hàng!", Toast.LENGTH_SHORT).show();
@@ -268,29 +292,9 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         });
     }
 
-    private void ShowLoginPopup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Bạn có muốn đăng nhập không?");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Không", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.setNegativeButton("Chấp nhận", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     private void AddOrRemoveFavorite(Drink drink, boolean isAdd) {
         Favorite favorite = new Favorite();
-        favorite.uId = Common.CurrentUser.getId();
+        favorite.uId = Common.CurrentUser.getPhone();
         favorite.fId = Integer.parseInt(drink.getID());
         favorite.fName = drink.getName();
         favorite.fImageCold = drink.getImageCold();

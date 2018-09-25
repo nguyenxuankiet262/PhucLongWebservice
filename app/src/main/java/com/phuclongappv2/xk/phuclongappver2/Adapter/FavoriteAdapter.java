@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.phuclongappv2.xk.phuclongappver2.ActivityMain;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
 import com.phuclongappv2.xk.phuclongappver2.FragmentDrink;
@@ -174,7 +175,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
                     alertDialog.dismiss();
                     //Create DB
                     Cart cartItem = new Cart();
-                    cartItem.uId = Common.CurrentUser.getId();
+                    cartItem.uId = Common.CurrentUser.getPhone();
                     cartItem.cId = favoriteList.get(position).fId;
                     cartItem.cName = favoriteList.get(position).fName;
                     cartItem.cQuanity = Integer.parseInt(elegantNumberButton.getNumber());
@@ -185,6 +186,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
                     cartItem.cPriceItem = favoriteList.get(position).fPrice;
                     //Add to DB
                     Common.cartRepository.insertCart(cartItem);
+                    ((ActivityMain) context).updateNotificationHomeIcon();
                     Toast.makeText(context, "Đã thêm " + elegantNumberButton.getNumber() + " " + favoriteList.get(position).fName + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
                 } else {
                     alertDialog.dismiss();

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.phuclongappv2.xk.phuclongappver2.Adapter.FavoriteAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
@@ -33,7 +34,7 @@ public class FragmentFavorite extends Fragment {
 
     private RecyclerView list_fav;
     FrameLayout favLayout;
-    RelativeLayout emptyLayout, loginLayout;
+    RelativeLayout emptyLayout;
     CoordinatorLayout existLayout;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -53,41 +54,38 @@ public class FragmentFavorite extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         emptyLayout = view.findViewById(R.id.empty_fav_layout);
-        loginLayout = view.findViewById(R.id.login_fav_layout);
         Common.parentFavLayout = view.findViewById(R.id.myCoordinatorLayout);
         list_fav = view.findViewById(R.id.list_favorite);
         list_fav.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         list_fav.setHasFixedSize(true);
         favLayout = view.findViewById(R.id.fav_layout);
         existLayout = view.findViewById(R.id.myCoordinatorLayout);
-        if(Common.CurrentUser != null) {
-            loginLayout.setVisibility(View.GONE);
-            loadFavItem();
-        }
-        else{
-            existLayout.setVisibility(View.GONE);
-            emptyLayout.setVisibility(View.GONE);
-        }
+        loadFavItem();
     }
 
     private void loadFavItem() {
-        compositeDisposable.add(Common.favoriteRepository.getFavItemsByUserID(Common.CurrentUser.getId())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<List<Favorite>>() {
-                    @Override
-                    public void accept(List<Favorite> favorites) throws Exception {
-                        if (Common.favoriteRepository.countFavItem(Common.CurrentUser.getId()) != 0) {
-                            existLayout.setVisibility(View.VISIBLE);
-                            emptyLayout.setVisibility(View.GONE);
+        if(Common.CurrentUser != null) {
+            compositeDisposable.add(Common.favoriteRepository.getFavItemsByUserID(Common.CurrentUser.getPhone())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Consumer<List<Favorite>>() {
+                        @Override
+                        public void accept(List<Favorite> favorites) throws Exception {
+                            if (Common.favoriteRepository.countFavItem(Common.CurrentUser.getPhone()) != 0) {
+                                existLayout.setVisibility(View.VISIBLE);
+                                emptyLayout.setVisibility(View.GONE);
+                            } else {
+                                emptyLayout.setVisibility(View.VISIBLE);
+                            }
+                            displayFav(favorites);
                         }
-                        else{
-                            emptyLayout.setVisibility(View.VISIBLE);
-                        }
-                        displayFav(favorites);
-                    }
-                })
-        );
+                    })
+            );
+        }
+        else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            existLayout.setVisibility(View.GONE);
+        }
     }
 
     private void displayFav(List<Favorite> favorites) {
@@ -98,5 +96,11 @@ public class FragmentFavorite extends Fragment {
     public void onDestroy() {
         compositeDisposable.dispose();
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadFavItem();
     }
 }

@@ -14,4 +14,5 @@ public interface ICartDataSource {
     void emptyCart();
     void updateCart(Cart... carts);
     void deleteCartItem(Cart cart);
+    void deleteCartById(int cartItemID);
 }
