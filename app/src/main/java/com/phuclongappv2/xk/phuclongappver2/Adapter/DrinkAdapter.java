@@ -225,7 +225,9 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                             //Add to DB
                             Common.cartRepository.insertCart(cartItem);
                             Toast.makeText(context, "Đã thêm " + numberButton.getNumber() + " " + drinkList.get(position).getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                            ((ActivityMain) context).updateNotificationHomeIcon();
+                            if(Common.checkInSearchActivity == 0) {
+                                ((ActivityMain) context).updateNotificationHomeIcon();
+                            }
                             holder.cart_btn.setImageResource(R.drawable.ic_shopping_cart_green_24dp);
                         } else {
                             alertDialog.dismiss();

@@ -52,7 +52,9 @@ public class ActivitySearch extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         mService = Common.getAPI();
-        Common.checkInSearchActivity = 1;
+
+        //2: đang trong activty search ko cần update badge cart
+        Common.checkInSearchActivity = 2;
 
         view = findViewById(R.id.line_search);
         btn_back = findViewById(R.id.btn_back_search);
@@ -163,6 +165,7 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     private void startSearch(CharSequence s) {
+        Common.checkInSearchActivity = 1;
         compositeDisposable.add(mService.getDrinkByName(s.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
