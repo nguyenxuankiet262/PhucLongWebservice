@@ -15,4 +15,5 @@
     <color name="colorDetails">#5da0de</color>
     <color name="colorOTW">#113ddb</color>
     <color name="colorSc">#efef00</color>
+    <color name="colorSearchBar">#E6E6E6</color>
 </resources>

@@ -27,6 +27,7 @@ import com.facebook.accountkit.ui.LoginType;
 import com.phuclongappv2.xk.phuclongappver2.ActivityMain;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
+import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.SuggestDrink;
 import com.phuclongappv2.xk.phuclongappver2.FragmentMore;
 import com.phuclongappv2.xk.phuclongappver2.Interface.ItemClickListener;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
@@ -75,6 +76,8 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final DrinkViewHolder holder, final int position) {
+        //Check click in searchactivity to add suggestdrink database
+
         //Khởi tạo image
         if (!drinkList.get(position).getImageCold().equals("empty")) {
             Picasso picasso = Picasso.with(context);
@@ -168,6 +171,11 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View v, final int position) {
+                if(Common.checkInSearchActivity == 1){
+                    if (Common.suggestDrinkRepository.isSuggestDrink(drinkList.get(position).getID()) != 1){
+                        AddToSuggestDrink(drinkList.get(position));
+                    }
+                }
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setCancelable(true);
                 View itemView = LayoutInflater.from(context).inflate(R.layout.popup_drink_detail, null);
@@ -227,6 +235,20 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                 });
             }
         });
+    }
+
+    private void AddToSuggestDrink(Drink drink) {
+        if(Common.suggestDrinkRepository.countSuggestDrinkItem() > 9){
+            Common.suggestDrinkRepository.deleteSuggestDrinkItem(Common.suggestDrinkRepository.getFirstItems());
+        }
+        SuggestDrink suggestDrink = new SuggestDrink();
+        suggestDrink.dId = drink.getID();
+        suggestDrink.dCategoryID = drink.getCategoryID();
+        suggestDrink.dImageCold = drink.getImageCold();
+        suggestDrink.dImageHot = drink.getImageHot();
+        suggestDrink.dName = drink.getName();
+        suggestDrink.dPrice = drink.getPrice();
+        Common.suggestDrinkRepository.insertSuggestDrink(suggestDrink);
     }
 
     private void loadDrinkDetail(final Drink drink) {

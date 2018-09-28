@@ -14,9 +14,11 @@ import com.facebook.accountkit.AccountKit;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.ViewPagerAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.CartRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.FavoriteRepository;
+import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.SuggestDrinkRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.CartDataSource;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.DrinkRoomDatabase;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.FavoriteDateSource;
+import com.phuclongappv2.xk.phuclongappver2.Database.Local.SuggestDrinkDataSource;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
 
 public class ActivityMain extends AppCompatActivity {
@@ -117,6 +119,7 @@ public class ActivityMain extends AppCompatActivity {
         Common.drinkroomDatabase = DrinkRoomDatabase.getInstance(this);
         Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.drinkroomDatabase.cartDAO()));
         Common.favoriteRepository = FavoriteRepository.getInstance(FavoriteDateSource.getInstance(Common.drinkroomDatabase.favoriteDAO()));
+        Common.suggestDrinkRepository = SuggestDrinkRepository.getInstance(SuggestDrinkDataSource.getInstance(Common.drinkroomDatabase.suggestDrinkDAO()));
     }
 
     @Override

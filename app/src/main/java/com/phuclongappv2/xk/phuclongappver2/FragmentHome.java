@@ -191,6 +191,8 @@ public class FragmentHome extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.icon_search:
+                Intent intent = new Intent(getActivity(),ActivitySearch.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);

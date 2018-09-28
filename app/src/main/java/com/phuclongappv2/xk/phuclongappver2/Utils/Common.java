@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.CartRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.FavoriteRepository;
+import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.SuggestDrinkRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.DrinkRoomDatabase;
 import com.phuclongappv2.xk.phuclongappver2.Model.Coordinates;
 import com.phuclongappv2.xk.phuclongappver2.Model.User;
@@ -21,10 +22,12 @@ public class Common {
     private static final String BASE_URL = "http://10.0.2.2/phuclong/";
 
     public static User CurrentUser = null;
+    public static int checkInSearchActivity = 0;
 
     public static DrinkRoomDatabase drinkroomDatabase;
     public static CartRepository cartRepository;
     public static FavoriteRepository favoriteRepository;
+    public static SuggestDrinkRepository suggestDrinkRepository;
 
     public static int BackPressA = 0;
     public static int BackPressB = 0;

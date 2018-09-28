@@ -32,6 +32,11 @@ public interface IPhucLongAPI {
     @FormUrlEncoded
     @POST("getdrink.php")
     Observable<List<Drink>> getDrink(@Field("menuid") String menuid);
+    @FormUrlEncoded
+    @POST("getdrinkbyname.php")
+    Observable<List<Drink>> getDrinkByName(@Field("s") String s);
+    @GET("gettenrandomdrink.php")
+    Observable<List<Drink>> getTenRandomDrinks();
     @GET("getbanner.php")
     Observable<List<Banner>> getBanner();
     @GET("getcategory.php")

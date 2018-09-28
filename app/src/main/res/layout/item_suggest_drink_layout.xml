@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite"
+    android:padding="10dp"
+    android:orientation="vertical">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/recent_image_drink"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:civ_border_color="@color/colorPrimaryDark"
+        app:civ_border_width="0.1dp"
+        android:src="@drawable/test"/>
+    <TextView
+        android:id="@+id/recent_name_drink"
+        android:layout_marginTop="4dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="13sp"
+        android:textColor="@color/colorBlack"
+        android:textAlignment="center"
+        android:ellipsize="end"
+        android:textAllCaps="true"
+        android:text="Trà đào"/>
+
+</LinearLayout>

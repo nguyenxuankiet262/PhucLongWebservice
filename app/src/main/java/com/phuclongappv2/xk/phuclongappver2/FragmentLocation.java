@@ -2,6 +2,8 @@ package com.phuclongappv2.xk.phuclongappver2;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.phuclongappv2.xk.phuclongappver2.Adapter.StoreAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Model.Coordinates;
@@ -37,7 +40,6 @@ public class FragmentLocation extends Fragment {
     IPhucLongAPI mService;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-
 
     public FragmentLocation(){
 
@@ -88,6 +90,7 @@ public class FragmentLocation extends Fragment {
         }
         adapter = new StoreAdapter(getActivity(),stores);
         recyclerView.setAdapter(adapter);
+        //autoScroll();
     }
 
     @Override
@@ -95,4 +98,23 @@ public class FragmentLocation extends Fragment {
         compositeDisposable.dispose();
         super.onDestroy();
     }
+
+    public void autoScroll(){
+        final int speedScroll = 500;
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                if(count == adapter.getItemCount())
+                    count =0;
+                if(count < adapter.getItemCount()){
+                    recyclerView.smoothScrollToPosition(++count);
+                    handler.postDelayed(this,speedScroll);
+                }
+            }
+        };
+        handler.postDelayed(runnable,speedScroll);
+    }
+
 }
