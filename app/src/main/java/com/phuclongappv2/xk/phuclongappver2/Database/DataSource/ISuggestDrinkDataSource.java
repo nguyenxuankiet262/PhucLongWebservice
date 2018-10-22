@@ -7,7 +7,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 public interface ISuggestDrinkDataSource {
-    int isSuggestDrink(String itemId);
+    int isSuggestDrink(int itemId);
     Flowable<List<SuggestDrink>> getSDItems();
     SuggestDrink getFirstItems();
     void insertSuggestDrink(SuggestDrink... suggestDrinks);

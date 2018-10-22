@@ -1,16 +1,23 @@
 package com.phuclongappv2.xk.phuclongappver2;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.facebook.accountkit.AccountKit;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.ViewPagerAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.CartRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.FavoriteRepository;
@@ -19,35 +26,56 @@ import com.phuclongappv2.xk.phuclongappver2.Database.Local.CartDataSource;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.DrinkRoomDatabase;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.FavoriteDateSource;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.SuggestDrinkDataSource;
+import com.phuclongappv2.xk.phuclongappver2.Model.Rating;
+import com.phuclongappv2.xk.phuclongappver2.Model.Store;
+import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
-public class ActivityMain extends AppCompatActivity {
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ActivityMain extends AppCompatActivity implements RatingDialogListener {
     CustomViewPager viewPager;
     ViewPagerAdapter adapter;
     AHBottomNavigation bottomNavigation;
-    private Fragment homeFragment;
-    private Fragment favoriteFragment;
-    private Fragment locationFragment;
-    private Fragment moreFragment;
+    private FragmentHome homeFragment;
+    private FragmentFavorite favoriteFragment;
+    private FragmentLocation locationFragment;
+    private FragmentNotification notificationFragment;
+    private FragmentMore moreFragment;
 
-
+    IPhucLongAPI mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mService = Common.getAPI();
+
         homeFragment = new FragmentHome();
         favoriteFragment = new FragmentFavorite();
         locationFragment = new FragmentLocation();
+        notificationFragment = new FragmentNotification();
         moreFragment = new FragmentMore();
 
         viewPager = (CustomViewPager) findViewById(R.id.fragment_content);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
         adapter = new ViewPagerAdapter (ActivityMain.this.getSupportFragmentManager());
         adapter.addFragment(homeFragment);
         adapter.addFragment(favoriteFragment);
         adapter.addFragment(locationFragment);
+        adapter.addFragment(notificationFragment);
         adapter.addFragment(moreFragment);
         viewPager.setAdapter(adapter);
 
@@ -55,12 +83,14 @@ public class ActivityMain extends AppCompatActivity {
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("HOME", R.drawable.ic_home_black_24dp);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("FAVORITE", R.drawable.ic_favorite_black_24dp);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem("LOCATION", R.drawable.ic_location_on_black_24dp);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem("MORE", R.drawable.ic_menu_black_24dp);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("NOTIFICATION", R.drawable.ic_notifications_green_24dp);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem("MORE", R.drawable.ic_menu_black_24dp);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
         bottomNavigation.addItem(item4);
+        bottomNavigation.addItem(item5);
 
         bottomNavigation.setAccentColor(Color.parseColor("#FFFFFF"));
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#176939"));
@@ -90,6 +120,10 @@ public class ActivityMain extends AppCompatActivity {
                         viewPager.setCurrentItem(3,false);
                         Common.checkPosision = 4;
                         return true;
+                    case 4:
+                        viewPager.setCurrentItem(4,false);
+                        Common.checkPosision = 5;
+                        return true;
                     default:
                         return false;
                 }
@@ -102,9 +136,9 @@ public class ActivityMain extends AppCompatActivity {
 
 
     public void setLoginPage(){
-        bottomNavigation.setCurrentItem(3);
-        viewPager.setCurrentItem(3,false);
-        Common.checkPosision = 4;
+        bottomNavigation.setCurrentItem(4);
+        viewPager.setCurrentItem(4,false);
+        Common.checkPosision = 5;
     }
 
     public void updateNotificationHomeIcon() {
@@ -112,6 +146,27 @@ public class ActivityMain extends AppCompatActivity {
             bottomNavigation.setNotification("", 0);
         else {
             bottomNavigation.setNotification(String.valueOf(Common.cartRepository.countCartItem()), 0);
+        }
+        if(Common.CurrentUser != null) {
+            Log.d("Noti", Common.CurrentUser.getNoti_history()+"");
+            if (TextUtils.isEmpty(Common.CurrentUser.getName()) || TextUtils.isEmpty(Common.CurrentUser.getAddress())) {
+                Log.d("Noti", Common.CurrentUser.getNoti_history()+"");
+                if(Common.CurrentUser.getNoti_history() == 1){
+                    bottomNavigation.setNotification("3", 4);
+                }
+                else{
+                    bottomNavigation.setNotification("2", 4);
+                }
+            } else {
+                Log.d("Noti", Common.CurrentUser.getNoti_history()+"");
+                if(Common.CurrentUser.getNoti_history() == 1){
+                    bottomNavigation.setNotification("1", 4);
+                }
+                else{
+                    bottomNavigation.setNotification("", 4);
+                }
+            }
+
         }
     }
 
@@ -130,7 +185,16 @@ public class ActivityMain extends AppCompatActivity {
         } else if (Common.checkPosision == 3 && Common.BackPressB > 0) {
             super.onBackPressed();
             Common.BackPressB--;
-        } else {
+        }
+        else if (Common.checkPosision == 4 && Common.BackPressD > 0){
+            super.onBackPressed();
+            Common.BackPressD--;
+        }
+        else if (Common.checkPosision == 5 && Common.BackPressE > 0){
+            super.onBackPressed();
+            Common.BackPressE--;
+        }
+        else {
             if(Common.CurrentUser != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Bạn có muốn đăng xuất không?");
@@ -165,4 +229,53 @@ public class ActivityMain extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onPositiveButtonClicked(int i, String s) {
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(ActivityMain.this);
+        progressDialog.setTitle("Submitting...");
+        progressDialog.setMessage("Please wait for a minute!");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        Rating rate = new Rating();
+        rate.setDrinkID(Common.drinkID);
+        rate.setRate(i);
+        rate.setComment(s);
+        Date date = new Date();
+        rate.setDate(DateFormat.getDateInstance(DateFormat.MEDIUM).format(date));
+        mService.setRating(Common.CurrentUser.getPhone(),rate.getDrinkID(),rate.getRate(),rate.getComment(),rate.getDate())
+                .enqueue(new Callback<Rating>() {
+            @Override
+            public void onResponse(Call<Rating> call, Response<Rating> response) {
+                Rating rating = response.body();
+                if(TextUtils.isEmpty(rating.getError_msg())) {
+                    progressDialog.dismiss();
+                    Toast.makeText(ActivityMain.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Rating> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.d("EEEE",t.getMessage());
+                Toast.makeText(ActivityMain.this,"Lỗi bất ngờ!", Toast.LENGTH_SHORT).show();
+            }
+        });
+//        Toast.makeText(ActivityMain.this, Common.CurrentUser.getPhone() + "\n"
+//                + rate.getDrinkID() + "\n"
+//                + rate.getRate() + "\n"
+//                + rate.getComment() + "\n"
+//                +rate.getDate(),Toast.LENGTH_LONG
+//        ).show();
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+
+    }
 }

@@ -3,10 +3,10 @@ package com.phuclongappv2.xk.phuclongappver2.Model;
 import java.io.Serializable;
 
 public class Drink implements Serializable {
-    String ID;
+    int ID;
     String imageCold;
     String imageHot;
-    String categoryID;
+    int categoryID;
     String Name;
     int Price;
 
@@ -14,7 +14,7 @@ public class Drink implements Serializable {
 
     }
 
-    public Drink(String ID, String imageCold, String imageHot, String categoryID, String name, int price) {
+    public Drink(int ID, String imageCold, String imageHot, int categoryID, String name, int price) {
         this.ID = ID;
         this.imageCold = imageCold;
         this.imageHot = imageHot;
@@ -23,11 +23,11 @@ public class Drink implements Serializable {
         Price = price;
     }
 
-    public String getID() {
+    public int getID() {
         return ID;
     }
 
-    public void setID(String ID) {
+    public void setID(int ID) {
         this.ID = ID;
     }
 
@@ -47,11 +47,11 @@ public class Drink implements Serializable {
         this.imageHot = imageHot;
     }
 
-    public String getCategoryID() {
+    public int getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(String categoryID) {
+    public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
     }
 

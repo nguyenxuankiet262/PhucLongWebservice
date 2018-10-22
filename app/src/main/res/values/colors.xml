@@ -16,4 +16,6 @@
     <color name="colorOTW">#113ddb</color>
     <color name="colorSc">#efef00</color>
     <color name="colorSearchBar">#E6E6E6</color>
+    <color name="colorTabText">#24af47</color>
+    <color name="colorBadge">#F44336</color>
 </resources>

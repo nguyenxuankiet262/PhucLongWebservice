@@ -23,7 +23,7 @@ public class SuggestDrinkDataSource implements ISuggestDrinkDataSource{
     }
 
     @Override
-    public int isSuggestDrink(String itemId) {
+    public int isSuggestDrink(int itemId) {
         return suggestDrinkDAO.isSuggestDrink(itemId);
     }
 

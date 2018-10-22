@@ -118,7 +118,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteViewHolder> {
     private void showDialogAdd(final int position) {
         final Dialog alertDialog = new Dialog(context);
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alertDialog.setContentView(R.layout.dialog_favorite_layout);
+        alertDialog.setContentView(R.layout.popup_favorite_layout);
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         image_cold = alertDialog.findViewById(R.id.cold_drink_fav_image);

@@ -5,6 +5,8 @@ import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 public class CartDataSource implements ICartDataSource {
 
     private CartDAO cartDAO;
@@ -26,7 +28,7 @@ public class CartDataSource implements ICartDataSource {
     }
 
     @Override
-    public List<Cart> getCartItems() {
+    public Flowable<List<Cart>> getCartItems() {
         return cartDAO.getCartItems();
     }
 

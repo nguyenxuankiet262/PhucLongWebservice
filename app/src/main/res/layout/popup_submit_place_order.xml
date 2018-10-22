@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+
+        android:textSize="20sp"
+        android:text="Nhập đầy đủ thông tin"
+        android:textColor="@color/colorBlack"
+        android:drawableLeft="@drawable/ic_lightbulb_outline_black_22dp"
+        android:drawablePadding="5dp"
+        />
+    <com.kofigyan.stateprogressbar.StateProgressBar
+        android:layout_margin = "20dp"
+        android:id="@+id/state_process_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:spb_currentStateNumber="one"
+        app:spb_maxStateNumber="three"
+        app:spb_stateBackgroundColor="#BDBDBD"
+        app:spb_stateForegroundColor="@color/colorPrimaryDark"
+        app:spb_stateNumberBackgroundColor="#808080"
+        app:spb_stateNumberForegroundColor="@color/colorWhite"
+        app:spb_currentStateDescriptionColor="@color/colorPrimaryDark"
+        app:spb_stateDescriptionColor="#808080"
+        app:spb_checkStateCompleted="true"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/fragment_dialog_comment"></include>
+        <include layout="@layout/fragment_dialog_details"></include>
+        <include layout="@layout/fragment_dialog_payment"></include>
+    </RelativeLayout>
+
+</LinearLayout>

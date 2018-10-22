@@ -42,7 +42,7 @@
                 android:layout_height="?android:attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                ></android.support.v7.widget.Toolbar>
+                />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -61,5 +61,6 @@
 
 
     </android.support.v7.widget.RecyclerView>
+
 
 </android.support.design.widget.CoordinatorLayout>

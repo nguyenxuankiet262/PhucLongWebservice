@@ -10,7 +10,7 @@ public class SuggestDrink {
     @PrimaryKey()
     @NonNull
     @ColumnInfo(name = "ID")
-    public String dId;
+    public int dId;
     @ColumnInfo(name = "Name")
     public String dName;
     @ColumnInfo(name = "imageCold")
@@ -18,7 +18,7 @@ public class SuggestDrink {
     @ColumnInfo(name = "imageHot")
     public String dImageHot;
     @ColumnInfo(name = "categoryID")
-    public String dCategoryID;
+    public int dCategoryID;
     @ColumnInfo(name = "Price")
     public int dPrice;
 }

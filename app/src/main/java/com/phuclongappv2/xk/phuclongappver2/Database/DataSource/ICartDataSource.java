@@ -4,9 +4,11 @@ import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 public interface ICartDataSource {
     int isCart(int itemId);
-    List<Cart> getCartItems();
+    Flowable<List<Cart>> getCartItems();
     List<Cart> getCartById(int cartItemID);
     List<Cart> getCartByUserId(String userID);
     int countCartItem();

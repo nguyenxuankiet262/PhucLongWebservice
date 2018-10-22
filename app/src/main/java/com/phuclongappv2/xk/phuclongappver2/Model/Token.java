@@ -1,16 +1,26 @@
 package com.phuclongappv2.xk.phuclongappver2.Model;
 
 public class Token {
+    public String phone;
     public String token;
-    public boolean isServerToken;
+    public int isServerToken;
 
     public Token() {
 
     }
 
-    public Token(String token, boolean isServerToken) {
+    public Token(String phone, String token, int isServerToken) {
+        this.phone = phone;
         this.token = token;
         this.isServerToken = isServerToken;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getToken() {
@@ -21,11 +31,11 @@ public class Token {
         this.token = token;
     }
 
-    public boolean isServerToken() {
+    public int getIsServerToken() {
         return isServerToken;
     }
 
-    public void setServerToken(boolean serverToken) {
-        isServerToken = serverToken;
+    public void setIsServerToken(int isServerToken) {
+        this.isServerToken = isServerToken;
     }
 }

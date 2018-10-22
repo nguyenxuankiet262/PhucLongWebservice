@@ -31,8 +31,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Milk Tea"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAllCaps="true"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/price_fav"

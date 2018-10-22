@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_margin="16dp"
+                    android:text="Details"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDesperate"></View>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:drawableLeft="@drawable/ic_person_black_22dp"
+                    android:drawablePadding="12dp"
+                    android:text="Họ và tên"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/name_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:hint="Nhập username"
+                    android:inputType="textPersonName"
+                    android:textSize="13sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_singleLineEllipsis="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:drawableLeft="@drawable/ic_home_black_22dp"
+                    android:drawablePadding="10dp"
+                    android:text="Địa chỉ"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/address_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:hint="Nhập địa chỉ"
+                    android:inputType="text"
+                    android:textSize="13sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_singleLineEllipsis="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:drawableLeft="@drawable/ic_smartphone_black_22dp"
+                    android:drawablePadding="10dp"
+                    android:text="Điện thoại"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/phone_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:hint="Nhập số điện thoại"
+                    android:maxLength="15"
+                    android:inputType="number"
+                    android:textSize="13sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_singleLineEllipsis="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:drawableLeft="@drawable/ic_store_mall_directory_black_22dp"
+                    android:drawablePadding="10dp"
+                    android:text="Chi nhánh"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp" />
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/spinner_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:ms_background_color="@color/colorSearchBar"
+                    app:ms_arrow_tint="@color/colorBlack"
+                    android:textSize="15sp"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+
+                    <info.hoang8f.widget.FButton
+                        android:id="@+id/dialog_next_details_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="16dp"
+                        android:shadowColor="@color/colorBlack"
+                        android:text="Next"
+                        android:textColor="@color/colorWhite"
+                        app:cornerRadius="10dp"
+                        app:fButtonColor="@color/colorPrimaryDark"
+                        app:shadowColor="@color/colorBlack"
+                        app:shadowEnabled="true"
+                        app:shadowHeight="5dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>

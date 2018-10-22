@@ -2,8 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@id/layout_cart"
-    android:layout_marginTop="?attr/actionBarSize"
+    android:layout_marginTop="?android:attr/actionBarSize"
     android:background="@color/white">
 
     <ImageView

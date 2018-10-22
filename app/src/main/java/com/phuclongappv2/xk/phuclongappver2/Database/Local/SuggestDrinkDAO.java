@@ -14,7 +14,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface SuggestDrinkDAO {
     @Query("SELECT EXISTS(SELECT 1 FROM SuggestDrink WHERE ID=:itemId)")
-    int isSuggestDrink(String itemId);
+    int isSuggestDrink(int itemId);
 
     @Query("SELECT * FROM SuggestDrink")
     Flowable<List<SuggestDrink>> getSDItems();

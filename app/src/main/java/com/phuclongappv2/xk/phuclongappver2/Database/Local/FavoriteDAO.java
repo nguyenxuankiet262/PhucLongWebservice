@@ -19,8 +19,14 @@ public interface FavoriteDAO {
     @Query("SELECT * FROM Favorite WHERE idUser=:userID")
     Flowable<List<Favorite>> getFavItemsByUserID(String userID);
 
-    @Query("SELECT EXISTS(SELECT 1 FROM Favorite WHERE id=:itemId AND idUser=:userId)")
-    int isFavorite(int itemId, String userId);
+    @Query("SELECT * FROM Favorite WHERE imagecold != 'empty'")
+    Flowable<List<Favorite>> getColdFav();
+
+    @Query("SELECT * FROM Favorite WHERE imagehot != 'empty'")
+    Flowable<List<Favorite>> getHotFav();
+
+    @Query("SELECT EXISTS(SELECT 1 FROM Favorite WHERE id=:itemId)")
+    int isFavorite(int itemId);
 
     @Insert
     void insertCart(Favorite... favorites);
@@ -28,6 +34,6 @@ public interface FavoriteDAO {
     @Delete
     void deleteFavItem(Favorite favorite);
 
-    @Query("SELECT COUNT(*) FROM Favorite WHERE idUser=:userID")
-    int countFavItem(String userID);
+    @Query("SELECT COUNT(*) FROM Favorite")
+    int countFavItem();
 }

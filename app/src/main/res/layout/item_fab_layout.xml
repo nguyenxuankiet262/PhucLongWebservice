@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/cold_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="85dp"
+        android:backgroundTint="@color/colorOTW"
+        android:src="@drawable/cold_icon_24"
+        />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/hot_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="85dp"
+        android:layout_marginEnd="15dp"
+        android:backgroundTint="@color/colorCancel"
+        android:src="@drawable/hot_icon_24"
+        />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/all_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="85dp"
+        android:layout_marginEnd="85dp"
+        android:src="@drawable/all_icon_24"
+        />
+
+</FrameLayout>

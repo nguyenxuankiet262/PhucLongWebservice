@@ -9,11 +9,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.StoreAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Model.Coordinates;
 import com.phuclongappv2.xk.phuclongappver2.Model.Store;
@@ -41,6 +45,14 @@ public class FragmentLocation extends Fragment {
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    List<String> listDistrict;
+
+    MaterialSpinner spinnerDistrict, spinnerCity;
+
+    ArrayAdapter<String> districtAdapter;
+
+    RelativeLayout empty_layout;
+
     public FragmentLocation(){
 
     }
@@ -63,35 +75,81 @@ public class FragmentLocation extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         recyclerView.setHasFixedSize(true);;
 
+        spinnerDistrict = view.findViewById(R.id.spinner_district);
+        spinnerCity = view.findViewById(R.id.spinner_city);
+        empty_layout = view.findViewById(R.id.empty_location_layout);
+
         //Load into common map
-        Common.coordinatesStringMap = new HashMap<String,Coordinates>();
-        loadStoreList();
+        Common.coordinatesStringMap = new HashMap<>();
+        loadStoreList(0);
+
+
+        listDistrict = new ArrayList<>();
+        listDistrict.add("Tất cả");
+        for(int i = 0; i < 12; i++) {
+            listDistrict.add("Quận " + (i + 1) + "");
+        }
+        listDistrict.add("Tân Bình");
+        listDistrict.add("Tân Phú");
+        listDistrict.add("Gò Vấp");
+        listDistrict.add("Phú Nhuận");
+        listDistrict.add("Bình Thạnh");
+        districtAdapter = new ArrayAdapter<>(getActivity(),R.layout.support_simple_spinner_dropdown_item,listDistrict);
+        spinnerDistrict.setAdapter(districtAdapter);
+        spinnerDistrict.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                loadStoreList(position);
+            }
+        });
+
+        spinnerCity.setText("Hồ Chí Minh");
+
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void loadStoreList() {
-        compositeDisposable.add(mService.getLocation()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Store>>() {
-                    @Override
-                    public void accept(List<Store> stores) throws Exception {
-                        displayStore(stores);
-                    }
-                }));
+    private void loadStoreList(int vitri) {
+        List<Store> all_stores = Common.CurrentStore;
+        if(vitri != 0) {
+            List<Store> stores = new ArrayList<>();
+            for (int i = 0; i < all_stores.size(); i++) {
+                String path = all_stores.get(i).getAddress();
+                String segments[] = path.split(", ");
+                String district = segments[segments.length - 2];
+                if (listDistrict.get(vitri).equals(district)) {
+                    Common.coordinatesStringMap.put(all_stores.get(i).getId(),
+                            new Coordinates(Common.ConvertStringToDouble(all_stores.get(i).getLat())
+                                    , Common.ConvertStringToDouble(all_stores.get(i).getLng())
+                                    , all_stores.get(i).getAddress()));
+                    stores.add(all_stores.get(i));
+                }
+            }
+            if(stores.size() != 0){
+                empty_layout.setVisibility(View.GONE);
+            }
+            else{
+                empty_layout.setVisibility(View.VISIBLE);
+            }
+            displayStore(stores);
+        }
+        else{
+            empty_layout.setVisibility(View.GONE);
+            for (int i = 0; i < all_stores.size(); i++) {
+                Common.coordinatesStringMap.put(all_stores.get(i).getId(),
+                        new Coordinates(Common.ConvertStringToDouble(all_stores.get(i).getLat())
+                                , Common.ConvertStringToDouble(all_stores.get(i).getLng())
+                                , all_stores.get(i).getAddress()));
+            }
+            displayStore(all_stores);
+        }
+
     }
 
     private void displayStore(List<Store> stores) {
-        for(int i = 0 ; i < stores.size(); i++){
-            Common.coordinatesStringMap.put(stores.get(i).getId(),
-                    new Coordinates(Common.ConvertStringToDouble(stores.get(i).getLat())
-                            ,Common.ConvertStringToDouble(stores.get(i).getLng())
-                            ,stores.get(i).getAddress()));
-        }
-        adapter = new StoreAdapter(getActivity(),stores);
+        adapter = new StoreAdapter(getActivity(), stores);
         recyclerView.setAdapter(adapter);
-        //autoScroll();
     }
+
 
     @Override
     public void onDestroy() {

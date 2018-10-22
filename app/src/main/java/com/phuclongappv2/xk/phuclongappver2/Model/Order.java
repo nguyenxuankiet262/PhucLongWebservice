@@ -5,56 +5,51 @@ import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 import java.util.List;
 
 public class Order {
-    private String userID;
-    private String id;
-    private String name;
+    private int id;
     private String address;
-    private String phone;
-    private String price;
-    private String status;
+    private String name;
     private String note;
     private String payment;
-    List<Cart> cartList;
+    private String phone;
+    private String price;
+    private String timeorder;
+    private String drinkdetail;
+    private int status;
+    private int storeID;
+
 
     public Order(){
 
     }
 
-    public Order(String userID, String id, String name, String address, String phone, String price, String status, String note, String payment, List<Cart> cartList) {
-        this.userID = userID;
+    public Order(int id, String address, String name, String note, String payment, String phone, String price, String timeorder, String drinkdetail, int status, int storeID) {
         this.id = id;
-        this.name = name;
         this.address = address;
-        this.phone = phone;
-        this.price = price;
-        this.status = status;
+        this.name = name;
         this.note = note;
         this.payment = payment;
-        this.cartList = cartList;
+        this.phone = phone;
+        this.price = price;
+        this.timeorder = timeorder;
+        this.drinkdetail = drinkdetail;
+        this.status = status;
+        this.storeID = storeID;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getPayment() {
-        return payment;
+    public String getAddress() {
+        return address;
     }
 
-    public void setPayment(String payment) {
-        this.payment = payment;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getName() {
@@ -65,12 +60,20 @@ public class Order {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getNote() {
+        return note;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
     }
 
     public String getPhone() {
@@ -89,27 +92,35 @@ public class Order {
         this.price = price;
     }
 
-    public String getStatus() {
+    public String getTimeorder() {
+        return timeorder;
+    }
+
+    public void setTimeorder(String timeorder) {
+        this.timeorder = timeorder;
+    }
+
+    public String getDrinkdetail() {
+        return drinkdetail;
+    }
+
+    public void setDrinkdetail(String drinkdetail) {
+        this.drinkdetail = drinkdetail;
+    }
+
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    public String getNote() {
-        return note;
+    public int getStoreID() {
+        return storeID;
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public List<Cart> getCartList() {
-        return cartList;
-    }
-
-    public void setCartList(List<Cart> cartList) {
-        this.cartList = cartList;
+    public void setStoreID(int storeID) {
+        this.storeID = storeID;
     }
 }

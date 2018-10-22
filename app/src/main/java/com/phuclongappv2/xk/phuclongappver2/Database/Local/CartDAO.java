@@ -10,13 +10,15 @@ import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Cart;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface CartDAO {
     @Query("SELECT EXISTS(SELECT 1 FROM Cart WHERE id=:itemId)")
     int isCart(int itemId);
 
     @Query("SELECT * FROM Cart")
-    List<Cart> getCartItems();
+    Flowable<List<Cart>> getCartItems();
 
     @Query("SELECT * FROM Cart WHERE id = :cartItemID")
     List<Cart> getCartById(int cartItemID);

@@ -32,10 +32,19 @@ public class FavoriteDateSource implements IFavoriteDataSource {
         return favoriteDAO.getFavItemsByUserID(userID);
     }
 
+    @Override
+    public Flowable<List<Favorite>> getColdFav(){
+        return favoriteDAO.getColdFav();
+    }
 
     @Override
-    public int isFavorite(int itemId, String userId) {
-        return favoriteDAO.isFavorite(itemId,userId);
+    public Flowable<List<Favorite>> getHotFav(){
+        return favoriteDAO.getHotFav();
+    }
+
+    @Override
+    public int isFavorite(int itemId) {
+        return favoriteDAO.isFavorite(itemId);
     }
 
     @Override
@@ -49,7 +58,7 @@ public class FavoriteDateSource implements IFavoriteDataSource {
     }
 
     @Override
-    public int countFavItem(String userID) {
-        return favoriteDAO.countFavItem(userID);
+    public int countFavItem() {
+        return favoriteDAO.countFavItem();
     }
 }

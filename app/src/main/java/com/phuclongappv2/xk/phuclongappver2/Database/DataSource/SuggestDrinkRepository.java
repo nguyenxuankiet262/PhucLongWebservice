@@ -22,7 +22,7 @@ public class SuggestDrinkRepository implements ISuggestDrinkDataSource {
     }
 
     @Override
-    public int isSuggestDrink(String itemId) {
+    public int isSuggestDrink(int itemId) {
         return suggestDrinkDataSource.isSuggestDrink(itemId);
     }
 

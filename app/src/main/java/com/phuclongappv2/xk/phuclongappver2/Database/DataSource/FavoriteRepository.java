@@ -33,8 +33,18 @@ public class FavoriteRepository implements IFavoriteDataSource{
     }
 
     @Override
-    public int isFavorite(int itemId, String userId) {
-        return favoriteDataSource.isFavorite(itemId, userId);
+    public Flowable<List<Favorite>> getColdFav() {
+        return favoriteDataSource.getColdFav();
+    }
+
+    @Override
+    public Flowable<List<Favorite>> getHotFav() {
+        return favoriteDataSource.getHotFav();
+    }
+
+    @Override
+    public int isFavorite(int itemId) {
+        return favoriteDataSource.isFavorite(itemId);
     }
 
     @Override
@@ -48,7 +58,7 @@ public class FavoriteRepository implements IFavoriteDataSource{
     }
 
     @Override
-    public int countFavItem(String userID) {
-        return favoriteDataSource.countFavItem(userID);
+    public int countFavItem() {
+        return favoriteDataSource.countFavItem();
     }
 }

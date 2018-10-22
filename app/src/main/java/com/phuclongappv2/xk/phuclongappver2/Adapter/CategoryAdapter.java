@@ -72,7 +72,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
                 drinkActivity.setArguments(bundle);
                 FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.main_fragment, drinkActivity, "DrinkFragment").addToBackStack(null).commit();
-                Common.BackPressA++;
             }
         });
     }

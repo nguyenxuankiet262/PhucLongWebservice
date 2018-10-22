@@ -41,12 +41,22 @@
         <activity
             android:name=".ActivityMain"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:theme="@style/MyTheme.TranslucentNavigation" />
         <activity
             android:name=".ActivityCart"
             android:parentActivityName=".ActivityMain"
             android:screenOrientation="portrait" />
-        <activity android:name=".ActivitySearch"></activity>
+        <activity android:name=".ActivitySearch"
+            android:screenOrientation="portrait"/>
+
+        <service
+            android:name=".Service.MyFirebaseMessaging"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

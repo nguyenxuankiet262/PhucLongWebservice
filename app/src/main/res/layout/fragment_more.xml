@@ -6,8 +6,14 @@
     android:id="@+id/fragment_more"
     tools:context=".FragmentMore">
 
+    <include layout="@layout/user_layout"
+        android:id="@+id/user_layout">
+    </include>
+
     <include layout="@layout/login_layout"
         android:id="@+id/login_layout">
     </include>
+
+
 
 </FrameLayout>

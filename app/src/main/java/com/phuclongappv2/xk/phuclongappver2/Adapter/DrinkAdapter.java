@@ -1,15 +1,10 @@
 package com.phuclongappv2.xk.phuclongappver2.Adapter;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,8 +25,12 @@ import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.Favorite;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.SuggestDrink;
 import com.phuclongappv2.xk.phuclongappver2.FragmentMore;
 import com.phuclongappv2.xk.phuclongappver2.Interface.ItemClickListener;
+import com.phuclongappv2.xk.phuclongappver2.Model.AverageRate;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
+import com.phuclongappv2.xk.phuclongappver2.Model.Rating;
+import com.phuclongappv2.xk.phuclongappver2.Model.User;
 import com.phuclongappv2.xk.phuclongappver2.R;
+import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
 import com.phuclongappv2.xk.phuclongappver2.ViewHolder.DrinkViewHolder;
 import com.squareup.picasso.Callback;
@@ -46,20 +45,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
-    Context context;
-    List<Drink> drinkList;
-    ImageView image_banner, image_cold, image_hot;
-    TextView drinkname, drinkprice;
-    FloatingActionButton cart_btn, rating_btn;
-    ElegantNumberButton numberButton;
-    RatingBar ratingBar;
-    int price;
-    String status = "empty";
-    FragmentActivity drinkactivity;
+    private Context context;
+    private List<Drink> drinkList;
+    private ImageView image_banner, image_cold, image_hot;
+    private TextView drinkname, drinkprice, average_rate;
+    private FloatingActionButton cart_btn, rating_btn;
+    private ElegantNumberButton numberButton;
+    private RatingBar ratingBar;
+    private int price;
+    private String status = "empty";
+    private FragmentActivity drinkactivity;
 
+    CommentAdapter adapter;
     RecyclerView listCmt;
+
+    IPhucLongAPI mService;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public DrinkAdapter(Context context, List<Drink> drinkList, FragmentActivity drinkactivity) {
         this.context = context;
@@ -76,6 +87,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final DrinkViewHolder holder, final int position) {
+        mService = Common.getAPI();
         //Check click in searchactivity to add suggestdrink database
 
         //Khởi tạo image
@@ -118,20 +130,15 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         } else {
             holder.image_product.setImageResource(R.drawable.thumb_default);
         }
-        if(Common.cartRepository.isCart(Integer.parseInt(drinkList.get(position).getID())) != 1) {
+        if(Common.cartRepository.isCart(drinkList.get(position).getID()) != 1) {
             holder.cart_btn.setImageResource(R.drawable.ic_add_shopping_cart_green_24dp);
         }
         else{
             holder.cart_btn.setImageResource(R.drawable.ic_shopping_cart_green_24dp);
         }
-        if(Common.CurrentUser != null) {
-            if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).getID()), Common.CurrentUser.getPhone()) == 1) {
-                holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
-            } else {
-                holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
-            }
-        }
-        else{
+        if (Common.favoriteRepository.isFavorite(drinkList.get(position).getID()) == 1) {
+            holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
+        } else {
             holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
         }
         //Khởi tạo price
@@ -142,17 +149,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         holder.fav_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Common.CurrentUser != null){
-                    if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).getID()), Common.CurrentUser.getPhone()) != 1) {
-                        AddOrRemoveFavorite(drinkList.get(position), true);
-                        holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
-                    } else {
-                        AddOrRemoveFavorite(drinkList.get(position), false);
-                        holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
-                    }
-                }
-                else{
-                    ((ActivityMain) context).setLoginPage();
+                if (Common.favoriteRepository.isFavorite(drinkList.get(position).getID()) != 1) {
+                    AddOrRemoveFavorite(drinkList.get(position), true);
+                    holder.fav_btn.setImageResource(R.drawable.ic_favorite_green_24dp);
+                } else {
+                    AddOrRemoveFavorite(drinkList.get(position), false);
+                    holder.fav_btn.setImageResource(R.drawable.ic_favorite_border_green_24dp);
                 }
 
             }
@@ -164,13 +166,19 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
                 }
                 else{
-                    ((ActivityMain) context).setLoginPage();
+                    if(Common.checkInSearchActivity == 0) {
+                        ((ActivityMain) context).setLoginPage();
+                    }
+                    else{
+                        Toast.makeText(context,"Bạn cần đăng nhập để thực hiện chức năng này!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View v, final int position) {
+                Common.drinkID = drinkList.get(position).getID();
                 if(Common.checkInSearchActivity == 1){
                     if (Common.suggestDrinkRepository.isSuggestDrink(drinkList.get(position).getID()) != 1){
                         AddToSuggestDrink(drinkList.get(position));
@@ -181,6 +189,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                 View itemView = LayoutInflater.from(context).inflate(R.layout.popup_drink_detail, null);
                 //Ánh xạ
 
+                average_rate = itemView.findViewById(R.id.average_score);
                 rating_btn = itemView.findViewById(R.id.btn_rating);
                 ratingBar = itemView.findViewById(R.id.rating_bar);
                 image_banner = itemView.findViewById(R.id.image_detail_drink);
@@ -192,7 +201,62 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
                 cart_btn = itemView.findViewById(R.id.btn_cart);
                 numberButton = itemView.findViewById(R.id.elegant_btn);
+
+                listCmt = itemView.findViewById(R.id.list_comment);
+                LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
+                mLayoutManager.setReverseLayout(true);
+                mLayoutManager.setStackFromEnd(true);
+                listCmt.setLayoutManager(mLayoutManager);
+
                 loadDrinkDetail(drinkList.get(position));
+                loadRating(drinkList.get(position).getID());
+
+                loadCmt(drinkList.get(position).getID());
+
+                image_cold.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        Picasso picasso = Picasso.with(v.getContext());
+                        picasso.setIndicatorsEnabled(false);
+                        picasso.load(drinkList.get(position).getImageCold()).networkPolicy(NetworkPolicy.OFFLINE)
+                                .into(image_banner, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Picasso picasso = Picasso.with(v.getContext());
+                                        picasso.setIndicatorsEnabled(false);
+                                        picasso.load(drinkList.get(position).getImageCold()).into(image_banner);
+                                    }
+                                });
+                        status = "cold";
+                    }
+                });
+                image_hot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        Picasso picasso = Picasso.with(v.getContext());
+                        picasso.setIndicatorsEnabled(false);
+                        picasso.load(drinkList.get(position).getImageHot()).networkPolicy(NetworkPolicy.OFFLINE)
+                                .into(image_banner, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Picasso picasso = Picasso.with(v.getContext());
+                                        picasso.setIndicatorsEnabled(false);
+                                        picasso.load(drinkList.get(position).getImageHot()).into(image_banner);
+                                    }
+                                });
+                        status = "hot";
+                    }
+                });
 
                 builder.setView(itemView);
                 final AlertDialog alertDialog = builder.show();
@@ -201,20 +265,20 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                     @Override
                     public void onClick(View v) {
                         alertDialog.hide();
-                        //showDialogRating();
+                        showDialogRating();
                     }
                 });
                 cart_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (Common.cartRepository.isCart(Integer.parseInt(drinkList.get(position).getID())) != 1) {
+                        if (Common.cartRepository.isCart(drinkList.get(position).getID()) != 1) {
                             alertDialog.dismiss();
                             //Create DB
                             Cart cartItem = new Cart();
                             if(Common.CurrentUser != null) {
                                 cartItem.uId = Common.CurrentUser.getPhone();
                             }
-                            cartItem.cId = Integer.parseInt(drinkList.get(position).getID());
+                            cartItem.cId = drinkList.get(position).getID();
                             cartItem.cName = drinkList.get(position).getName();
                             cartItem.cQuanity = Integer.parseInt(numberButton.getNumber());
                             cartItem.cPrice = price;
@@ -237,6 +301,60 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                 });
             }
         });
+    }
+
+    private void loadCmt(int id) {
+        compositeDisposable.add(mService.getRating(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Rating>>() {
+                    @Override
+                    public void accept(List<Rating> ratings) throws Exception {
+                        displayComment(ratings);
+                    }
+                })
+        );
+    }
+
+    private void displayComment(List<Rating> ratings) {
+        adapter = new CommentAdapter(context, ratings);
+        listCmt.setAdapter(adapter);
+    }
+
+    private void loadRating(int id) {
+        mService.getAvgRate(id).enqueue(new retrofit2.Callback<AverageRate>() {
+            @Override
+            public void onResponse(Call<AverageRate> call, Response<AverageRate> response) {
+                AverageRate averageRate = response.body();
+                if(averageRate.getAvg_rate() != null) {
+                    ratingBar.setRating(averageRate.getAvg_rate());
+                    average_rate.setText(String.valueOf(averageRate.getAvg_rate()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AverageRate> call, Throwable t) {
+                Log.d("EEEE", t.getMessage());
+            }
+        });
+    }
+
+    private void showDialogRating() {
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Chấp nhận")
+                .setNegativeButtonText("Hủy")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not Good", "Normal", "Good", "Very Good"))
+                .setDefaultRating(5)
+                .setTitle("Rating this drink")
+                .setDescription("Please select start and give us your feedback")
+                .setTitleTextColor(R.color.colorPrimaryDark)
+                .setDescriptionTextColor(R.color.colorPrimaryDark)
+                .setHint("Write somethings ...")
+                .setCommentTextColor(R.color.colorWhite)
+                .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                .setWindowAnimation(R.style.RatingDialogFadeAnim)
+                .create(drinkactivity)
+                .show();
     }
 
     private void AddToSuggestDrink(Drink drink) {
@@ -318,13 +436,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
     private void AddOrRemoveFavorite(Drink drink, boolean isAdd) {
         Favorite favorite = new Favorite();
-        favorite.uId = Common.CurrentUser.getPhone();
-        favorite.fId = Integer.parseInt(drink.getID());
+        favorite.fId = drink.getID();
         favorite.fName = drink.getName();
         favorite.fImageCold = drink.getImageCold();
         favorite.fImageHot = drink.getImageHot();
         favorite.fPrice = drink.getPrice();
-        favorite.fMenu = drink.getCategoryID();
+        favorite.fMenu = String.valueOf(drink.getCategoryID());
         if (isAdd) {
             Common.favoriteRepository.insertCart(favorite);
         } else {
@@ -337,4 +454,6 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
     public int getItemCount() {
         return drinkList.size();
     }
+
+
 }

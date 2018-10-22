@@ -161,42 +161,44 @@
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="30dp">
+                        <TextView
+                            android:id="@+id/average_score"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="0"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="40sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/average_score"
+                            android:layout_alignParentBottom="true"
+                            android:text="/5"
+                            android:textSize="30sp" />
+                    </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/average_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="-20dp"
-                        android:text="5,0"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="40sp" />
                     <RatingBar
                         android:id="@+id/rating_bar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:max="5"
-                        android:rating="5"
+                        android:rating="0"
                         android:theme="@style/RatingBar"
                         style="?android:attr/ratingBarStyleSmall"
                         />
-
-                    <TextView
-                        android:id="@+id/total_user"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/ic_person_black_20dp"
-                        android:text="1,000,000"
-                        android:textSize="15sp" />
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:layout_marginTop="2dp"></android.support.v7.widget.RecyclerView>
+                        android:layout_marginTop="2dp"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

@@ -18,11 +18,11 @@
         android:layout_marginTop="4dp"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:maxLines="1"
         android:textSize="13sp"
         android:textColor="@color/colorBlack"
         android:textAlignment="center"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textAllCaps="true"
         android:text="Trà đào"/>
 

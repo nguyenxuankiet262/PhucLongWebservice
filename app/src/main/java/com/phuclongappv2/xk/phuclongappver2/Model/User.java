@@ -4,19 +4,37 @@ public class User {
     String phone;
     String name;
     String address;
-    String birthday;
+    int noti_history;
+    int noti_news;
     String error_msg;
 
     public User() {
 
     }
 
-    public User(String phone, String name, String address, String birthday, String error_msg) {
+    public User(String phone, String name, String address, int noti_history, int noti_news, String error_msg) {
         this.phone = phone;
         this.name = name;
         this.address = address;
-        this.birthday = birthday;
+        this.noti_history = noti_history;
+        this.noti_news = noti_news;
         this.error_msg = error_msg;
+    }
+
+    public int getNoti_history() {
+        return noti_history;
+    }
+
+    public void setNoti_history(int noti_history) {
+        this.noti_history = noti_history;
+    }
+
+    public int getNoti_news() {
+        return noti_news;
+    }
+
+    public void setNoti_news(int noti_news) {
+        this.noti_news = noti_news;
     }
 
     public String getPhone() {
@@ -41,14 +59,6 @@ public class User {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
     }
 
     public String getError_msg() {

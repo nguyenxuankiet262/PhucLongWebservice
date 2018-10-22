@@ -1,12 +1,15 @@
 package com.phuclongappv2.xk.phuclongappver2;
 
+import android.app.ProgressDialog;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,9 +22,13 @@ import com.phuclongappv2.xk.phuclongappver2.Adapter.DrinkAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.RecentDrinkAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.SuggestDrink;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
+import com.phuclongappv2.xk.phuclongappver2.Model.Rating;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -30,8 +37,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class ActivitySearch extends AppCompatActivity {
+public class ActivitySearch extends AppCompatActivity implements RatingDialogListener {
 
     MaterialSearchBar searchBar;
     ImageView btn_back;
@@ -210,5 +220,49 @@ public class ActivitySearch extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Common.checkInSearchActivity = 0;
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int i, String s) {
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(ActivitySearch.this);
+        progressDialog.setTitle("Submitting...");
+        progressDialog.setMessage("Please wait for a minute!");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        Rating rate = new Rating();
+        rate.setDrinkID(Common.drinkID);
+        rate.setRate(i);
+        rate.setComment(s);
+        Date date = new Date();
+        rate.setDate(DateFormat.getDateInstance(DateFormat.MEDIUM).format(date));
+        mService.setRating(Common.CurrentUser.getPhone(),rate.getDrinkID(),rate.getRate(),rate.getComment(),rate.getDate())
+                .enqueue(new Callback<Rating>() {
+                    @Override
+                    public void onResponse(Call<Rating> call, Response<Rating> response) {
+                        Rating rating = response.body();
+                        if(TextUtils.isEmpty(rating.getError_msg())) {
+                            progressDialog.dismiss();
+                            Toast.makeText(ActivitySearch.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Rating> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Log.d("EEEE",t.getMessage());
+                        Toast.makeText(ActivitySearch.this,"Lỗi bất ngờ!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+
     }
 }

@@ -21,5 +21,12 @@
             android:scrollbars="vertical" />
     </android.support.design.widget.CoordinatorLayout>
 
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FAB_favorite"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/all_icon_24"/>
+    <include layout="@layout/item_fab_layout"/>
 </FrameLayout>

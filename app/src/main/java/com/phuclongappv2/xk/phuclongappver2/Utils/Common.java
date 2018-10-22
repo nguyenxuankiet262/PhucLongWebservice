@@ -10,19 +10,27 @@ import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.FavoriteReposito
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.SuggestDrinkRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.DrinkRoomDatabase;
 import com.phuclongappv2.xk.phuclongappver2.Model.Coordinates;
+import com.phuclongappv2.xk.phuclongappver2.Model.Store;
+import com.phuclongappv2.xk.phuclongappver2.Model.Token;
 import com.phuclongappv2.xk.phuclongappver2.Model.User;
+import com.phuclongappv2.xk.phuclongappver2.Retrofit.FCMClient;
+import com.phuclongappv2.xk.phuclongappver2.Retrofit.IFCMService;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.RetrofitClient;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class Common {
     private static final String BASE_URL = "http://10.0.2.2/phuclong/";
+    private static final String FCM_URL = "https://fcm.googleapis.com/";
 
     public static User CurrentUser = null;
+    public static Token CurrentToken = null;
     public static int checkInSearchActivity = 0;
+    public static List<Store> CurrentStore;
 
     public static DrinkRoomDatabase drinkroomDatabase;
     public static CartRepository cartRepository;
@@ -31,7 +39,12 @@ public class Common {
 
     public static int BackPressA = 0;
     public static int BackPressB = 0;
+    public static int BackPressD = 0;
+    public static int BackPressE = 0;
     public static int checkPosision = 1;
+    public static int checkHistory = 0;
+
+    public static int drinkID;
 
     public static View parentFavLayout;
     public static boolean checkDrinkFragmentOpen;
@@ -40,6 +53,10 @@ public class Common {
 
     public static IPhucLongAPI getAPI(){
         return RetrofitClient.getClient(BASE_URL).create(IPhucLongAPI.class);
+    }
+
+    public static IFCMService getFCMService(){
+        return FCMClient.getClient(FCM_URL).create(IFCMService.class);
     }
 
     public static boolean isConnectedToInternet(Context context){
