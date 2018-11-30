@@ -4,17 +4,22 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 import com.facebook.accountkit.AccountKit;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +33,7 @@ import com.phuclongappv2.xk.phuclongappver2.Database.Local.FavoriteDateSource;
 import com.phuclongappv2.xk.phuclongappver2.Database.Local.SuggestDrinkDataSource;
 import com.phuclongappv2.xk.phuclongappver2.Model.Rating;
 import com.phuclongappv2.xk.phuclongappver2.Model.Store;
+import com.phuclongappv2.xk.phuclongappver2.Model.User;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
 import com.stepstone.apprating.listener.RatingDialogListener;
@@ -36,6 +42,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -60,6 +67,7 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Common.checkInSearchActivity = 0;
 
         mService = Common.getAPI();
 
@@ -134,23 +142,9 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
         updateNotificationHomeIcon();
     }
 
-
-    public void setLoginPage(){
-        bottomNavigation.setCurrentItem(4);
-        viewPager.setCurrentItem(4,false);
-        Common.checkPosision = 5;
-    }
-
     public void updateNotificationHomeIcon() {
-        if (Common.cartRepository.countCartItem() == 0)
-            bottomNavigation.setNotification("", 0);
-        else {
-            bottomNavigation.setNotification(String.valueOf(Common.cartRepository.countCartItem()), 0);
-        }
         if(Common.CurrentUser != null) {
-            Log.d("Noti", Common.CurrentUser.getNoti_history()+"");
             if (TextUtils.isEmpty(Common.CurrentUser.getName()) || TextUtils.isEmpty(Common.CurrentUser.getAddress())) {
-                Log.d("Noti", Common.CurrentUser.getNoti_history()+"");
                 if(Common.CurrentUser.getNoti_history() == 1){
                     bottomNavigation.setNotification("3", 4);
                 }
@@ -158,7 +152,6 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
                     bottomNavigation.setNotification("2", 4);
                 }
             } else {
-                Log.d("Noti", Common.CurrentUser.getNoti_history()+"");
                 if(Common.CurrentUser.getNoti_history() == 1){
                     bottomNavigation.setNotification("1", 4);
                 }
@@ -166,7 +159,9 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
                     bottomNavigation.setNotification("", 4);
                 }
             }
-
+        }
+        else{
+            bottomNavigation.setNotification("",4);
         }
     }
 
@@ -174,7 +169,6 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
         Common.drinkroomDatabase = DrinkRoomDatabase.getInstance(this);
         Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.drinkroomDatabase.cartDAO()));
         Common.favoriteRepository = FavoriteRepository.getInstance(FavoriteDateSource.getInstance(Common.drinkroomDatabase.favoriteDAO()));
-        Common.suggestDrinkRepository = SuggestDrinkRepository.getInstance(SuggestDrinkDataSource.getInstance(Common.drinkroomDatabase.suggestDrinkDAO()));
     }
 
     @Override
@@ -208,13 +202,29 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
                 builder.setNegativeButton("Chấp nhận", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Common.CurrentUser = null;
-                        AccountKit.logOut();
-                        recreate();
+                        if(Common.isConnectedToInternet(ActivityMain.this)) {
+                            Common.CurrentUser = null;
+                            AccountKit.logOut();
+                            final AlertDialog alertDialog = new SpotsDialog.Builder().setContext(ActivityMain.this).build();
+                            alertDialog.setMessage("Please waiting...");
+                            alertDialog.show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    alertDialog.dismiss();
+                                    Toast.makeText(ActivityMain.this, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+                                    recreate();
+                                }
+                            }, 2000);
+                        }
+                        else{
+                            Toast.makeText(ActivityMain.this,"Kiểm tra kết nối mạng!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+
             }
             else{
                 finish();
@@ -228,6 +238,14 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
         updateNotificationHomeIcon();
     }
 
+    public void updateNoti(){
+        homeFragment.updateCartCount();
+        locationFragment.updateCartCount();
+        favoriteFragment.updateCartCount();
+        moreFragment.updateCartCount();
+        notificationFragment.updateCartCount();
+    }
+
 
     @Override
     public void onPositiveButtonClicked(int i, String s) {
@@ -237,36 +255,57 @@ public class ActivityMain extends AppCompatActivity implements RatingDialogListe
         progressDialog.setMessage("Please wait for a minute!");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-        Rating rate = new Rating();
+        final Rating rate = new Rating();
         rate.setDrinkID(Common.drinkID);
         rate.setRate(i);
         rate.setComment(s);
         Date date = new Date();
         rate.setDate(DateFormat.getDateInstance(DateFormat.MEDIUM).format(date));
-        mService.setRating(Common.CurrentUser.getPhone(),rate.getDrinkID(),rate.getRate(),rate.getComment(),rate.getDate())
-                .enqueue(new Callback<Rating>() {
-            @Override
-            public void onResponse(Call<Rating> call, Response<Rating> response) {
-                Rating rating = response.body();
-                if(TextUtils.isEmpty(rating.getError_msg())) {
-                    progressDialog.dismiss();
-                    Toast.makeText(ActivityMain.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
-                }
-            }
+        if(Common.CurrentUser != null) {
+            if (Common.isConnectedToInternet(getBaseContext())) {
+                mService.getUser(Common.CurrentUser.getPhone()).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if(response.body().getActive() == 1){
+                            mService.setRating(Common.CurrentUser.getPhone(), rate.getDrinkID(), rate.getRate(), rate.getComment(), rate.getDate())
+                                    .enqueue(new Callback<Rating>() {
+                                        @Override
+                                        public void onResponse(Call<Rating> call, Response<Rating> response) {
+                                            Rating rating = response.body();
+                                            if (TextUtils.isEmpty(rating.getError_msg())) {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(ActivityMain.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
 
-            @Override
-            public void onFailure(Call<Rating> call, Throwable t) {
+                                        @Override
+                                        public void onFailure(Call<Rating> call, Throwable t) {
+                                            progressDialog.dismiss();
+                                            Log.d("EEEE", t.getMessage());
+                                            Toast.makeText(ActivityMain.this, "Lỗi bất ngờ!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                        else{
+                            progressDialog.dismiss();
+                            Toast.makeText(ActivityMain.this, "Tài khoản đã bị khóa!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                    }
+                });
+            } else {
                 progressDialog.dismiss();
-                Log.d("EEEE",t.getMessage());
-                Toast.makeText(ActivityMain.this,"Lỗi bất ngờ!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Kiểm tra kết nối mạng!", Toast.LENGTH_SHORT).show();
             }
-        });
-//        Toast.makeText(ActivityMain.this, Common.CurrentUser.getPhone() + "\n"
-//                + rate.getDrinkID() + "\n"
-//                + rate.getRate() + "\n"
-//                + rate.getComment() + "\n"
-//                +rate.getDate(),Toast.LENGTH_LONG
-//        ).show();
+        }
+        else{
+            progressDialog.dismiss();
+            Toast.makeText(getBaseContext(), "Bạn cần đăng nhập để thực hiện chức năng này!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

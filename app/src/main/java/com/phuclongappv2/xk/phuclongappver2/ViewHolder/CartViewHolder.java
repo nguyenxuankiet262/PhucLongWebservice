@@ -12,7 +12,7 @@ import com.phuclongappv2.xk.phuclongappver2.R;
 
 public class CartViewHolder extends RecyclerView.ViewHolder{
     public ImageView image_cart;
-    public TextView status_hot, status_cold, name_cart, price_cart;
+    public TextView status_hot, status_cold, name_cart, price_cart, sugar_cart, ice_cart, milk_cream, seeds, white_pearl, black_pearl, red_bean;
     public ElegantNumberButton quanity_cart;
 
     public RelativeLayout view_background;
@@ -29,5 +29,12 @@ public class CartViewHolder extends RecyclerView.ViewHolder{
         name_cart = itemView.findViewById(R.id.name_cart);
         price_cart = itemView.findViewById(R.id.price_cart);
         quanity_cart = itemView.findViewById(R.id.quanity_cart);
+        sugar_cart = itemView.findViewById(R.id.sugar_cart);
+        ice_cart = itemView.findViewById(R.id.ice_cart);
+        milk_cream = itemView.findViewById(R.id.milk_cream_topping);
+        seeds = itemView.findViewById(R.id.seeds_topping);
+        white_pearl = itemView.findViewById(R.id.white_pearl_topping);
+        black_pearl = itemView.findViewById(R.id.black_pearl_topping);
+        red_bean = itemView.findViewById(R.id.red_beans_topping);
     }
 }

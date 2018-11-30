@@ -24,15 +24,17 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/layout_cart"
         android:id="@+id/cart_exist_layout">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/cart_list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_layout_cart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:scrollbars="vertical"
-            >
-
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cart_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
     <include layout="@layout/empty_cart_layout"

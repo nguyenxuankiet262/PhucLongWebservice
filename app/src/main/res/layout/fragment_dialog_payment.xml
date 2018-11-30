@@ -50,19 +50,6 @@
                     android:textSize="15sp" />
 
                 <RadioButton
-                    android:id="@+id/radio_paypal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:drawableLeft="@drawable/ic_paypal"
-                    android:drawablePadding="5dp"
-                    android:paddingLeft="16dp"
-                    android:text="Paypal"
-                    android:textSize="15sp" />
-
-                <RadioButton
                     android:id="@+id/radi_cash_on_delivery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

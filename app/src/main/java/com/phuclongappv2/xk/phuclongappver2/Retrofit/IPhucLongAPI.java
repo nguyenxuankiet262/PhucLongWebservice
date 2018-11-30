@@ -5,6 +5,8 @@ import com.phuclongappv2.xk.phuclongappver2.Model.Banner;
 import com.phuclongappv2.xk.phuclongappver2.Model.Category;
 import com.phuclongappv2.xk.phuclongappver2.Model.CheckUserResponse;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
+import com.phuclongappv2.xk.phuclongappver2.Model.Feedback;
+import com.phuclongappv2.xk.phuclongappver2.Model.News;
 import com.phuclongappv2.xk.phuclongappver2.Model.Order;
 import com.phuclongappv2.xk.phuclongappver2.Model.Rating;
 import com.phuclongappv2.xk.phuclongappver2.Model.Store;
@@ -28,7 +30,9 @@ public interface IPhucLongAPI {
     @POST("registeruser.php")
     Call<User> registerUser(@Field("phone") String phone,
                             @Field("name") String name,
-                            @Field("address") String address);
+                            @Field("address") String address,
+                            @Field("active") int active,
+                            @Field("noti_news") int noti_news);
     @FormUrlEncoded
     @POST("inserttoken.php")
     Call<Token> insertToken(@Field("phone") String phone,
@@ -38,10 +42,15 @@ public interface IPhucLongAPI {
     @POST("updateuser.php")
     Call<User> updateUser(@Field("phone") String phone,
                             @Field("name") String name,
-                            @Field("address") String address);@FormUrlEncoded
+                            @Field("address") String address);
+    @FormUrlEncoded
     @POST("updatehistory.php")
     Call<User> updateHistory(@Field("phone") String phone,
                           @Field("noti_history") int noti_history);
+    @FormUrlEncoded
+    @POST("updatenews.php")
+    Call<User> updateNews(@Field("phone") String phone,
+                             @Field("noti_news") int noti_news);
     @FormUrlEncoded
     @POST("setrating.php")
     Call<Rating> setRating(@Field("userID") String userID,
@@ -50,20 +59,31 @@ public interface IPhucLongAPI {
                            @Field("comment") String comment,
                            @Field("date") String date);
     @FormUrlEncoded
+    @POST("insertfeedback.php")
+    Call<Feedback> insertFeedback(@Field("phone") String phone,
+                                  @Field("content") String content);
+    @FormUrlEncoded
     @POST("insertorder.php")
     Call<String> insertOrder(@Field("address") String address,
-                                @Field("name") String name,
-                                @Field("note") String note,
-                                @Field("payment") String payment,
-                                @Field("phone") String phone,
-                                @Field("price") String price,
-                                @Field("timeorder") String timeorder,
-                                @Field("drinkdetail") String drinkdetail,
-                                @Field("status") int status,
-                                @Field("storeID") int storeID);
+                             @Field("name") String name,
+                             @Field("note") String note,
+                             @Field("payment") String payment,
+                             @Field("phone") String phone,
+                             @Field("price") String price,
+                             @Field("timeorder") String timeorder,
+                             @Field("drinkdetail") String drinkdetail,
+                             @Field("status") int status,
+                             @Field("storeID") int storeID);
+    @FormUrlEncoded
+    @POST("braintree/checkout.php")
+    Call<String> payment(@Field("nonce") String nonce,
+                         @Field("amount") String amount);
     @FormUrlEncoded
     @POST("getuser.php")
     Call<User> getUser(@Field("phone") String phone);
+    @FormUrlEncoded
+    @POST("getfeedback.php")
+    Observable<List<Feedback>> getFeedback(@Field("phone") String phone);
     @FormUrlEncoded
     @POST("gettoken.php")
     Call<Token> getToken(@Field("phone") String phone,
@@ -84,6 +104,13 @@ public interface IPhucLongAPI {
     @POST("getorderbystatus.php")
     Observable<List<Order>> getOrderByStatus(@Field("phone") String phone,
                                              @Field("status") int status);
+    @FormUrlEncoded
+    @POST("getnews.php")
+    Observable<List<News>> getNews(@Field("status") int status,
+                                   @Field("count") int count);
+    @FormUrlEncoded
+    @POST("getallnews.php")
+    Observable<List<News>> getAllNews(@Field("count") int count);
     @GET("gettenrandomdrink.php")
     Observable<List<Drink>> getTenRandomDrinks();
     @GET("getbanner.php")

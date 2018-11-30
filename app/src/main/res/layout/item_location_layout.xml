@@ -12,7 +12,7 @@
             android:id="@+id/layout_store"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal">z
             <ImageView
                 android:id="@+id/image_store"
                 android:layout_width="100dp"

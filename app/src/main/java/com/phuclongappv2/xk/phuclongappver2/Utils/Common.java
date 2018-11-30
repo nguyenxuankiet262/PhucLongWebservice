@@ -1,9 +1,18 @@
 package com.phuclongappv2.xk.phuclongappver2.Utils;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.CartRepository;
 import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.FavoriteRepository;
@@ -13,10 +22,12 @@ import com.phuclongappv2.xk.phuclongappver2.Model.Coordinates;
 import com.phuclongappv2.xk.phuclongappver2.Model.Store;
 import com.phuclongappv2.xk.phuclongappver2.Model.Token;
 import com.phuclongappv2.xk.phuclongappver2.Model.User;
+import com.phuclongappv2.xk.phuclongappver2.R;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.FCMClient;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IFCMService;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.RetrofitClient;
+import com.phuclongappv2.xk.phuclongappver2.Retrofit.RetrofitScalarsClient;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -24,8 +35,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Common {
-    private static final String BASE_URL = "http://10.0.2.2/phuclong/";
-    private static final String FCM_URL = "https://fcm.googleapis.com/";
+    public static final String BASE_URL = "https://phuclongvn.000webhostapp.com/";
+    public static final String API_TOKEN_URL = "https://phuclongvn.000webhostapp.com/braintree/main.php";
+    public static final String FCM_URL = "https://fcm.googleapis.com/";
 
     public static User CurrentUser = null;
     public static Token CurrentToken = null;
@@ -42,7 +54,6 @@ public class Common {
     public static int BackPressD = 0;
     public static int BackPressE = 0;
     public static int checkPosision = 1;
-    public static int checkHistory = 0;
 
     public static int drinkID;
 
@@ -53,6 +64,10 @@ public class Common {
 
     public static IPhucLongAPI getAPI(){
         return RetrofitClient.getClient(BASE_URL).create(IPhucLongAPI.class);
+    }
+
+    public static IPhucLongAPI getScalarsAPI(){
+        return RetrofitScalarsClient.getScalarsClient(BASE_URL).create(IPhucLongAPI.class);
     }
 
     public static IFCMService getFCMService(){
@@ -114,5 +129,26 @@ public class Common {
     }
     public static double ConvertStringToDouble(String s){
         return Double.parseDouble(s);
+    }
+
+    public static boolean isLocationEnabled(Context context)
+    {
+        int locationMode = 0;
+        String locationProviders;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            try
+            {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        }
+        else
+        {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
     }
 }

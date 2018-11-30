@@ -5,6 +5,7 @@
     <string name="map_api_key">AIzaSyCwL7g9mCJodrBQUyojiZapTobF4q7Y3yY</string>
 
     <string name="FACEBOOK_APP_ID">2081103335437366</string>
+    <string name="FACEBOOK_LOGIN_PROTOCOL_SCHEME">fb2081103335437366</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">7748d1b1deb026798de0e89d986ee06b</string>
 
     <!-- TODO: Remove or change this placeholder text -->

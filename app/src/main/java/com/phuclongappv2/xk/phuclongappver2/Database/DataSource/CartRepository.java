@@ -25,7 +25,7 @@ public class CartRepository implements ICartDataSource {
     }
 
     @Override
-    public Flowable<List<Cart>> getCartItems() {
+    public List<Cart> getCartItems() {
         return iCartDataSource.getCartItems();
     }
 

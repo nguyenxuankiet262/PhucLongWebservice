@@ -6,12 +6,12 @@
         android:title="Search"
         android:orderInCategory="100"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         />
     <item android:id="@+id/icon_cart_menu"
         android:title="Cart"
         android:orderInCategory="100"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         app:actionLayout="@layout/action_bar_notification_icon"
         />
 </menu>

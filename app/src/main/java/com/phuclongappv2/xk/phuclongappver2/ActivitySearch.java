@@ -1,7 +1,9 @@
 package com.phuclongappv2.xk.phuclongappver2;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +12,9 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,6 +24,8 @@ import android.widget.Toast;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.DrinkAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.RecentDrinkAdapter;
+import com.phuclongappv2.xk.phuclongappver2.Database.DataSource.SuggestDrinkRepository;
+import com.phuclongappv2.xk.phuclongappver2.Database.Local.SuggestDrinkDataSource;
 import com.phuclongappv2.xk.phuclongappver2.Database.ModelDB.SuggestDrink;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
 import com.phuclongappv2.xk.phuclongappver2.Model.Rating;
@@ -41,6 +47,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.phuclongappv2.xk.phuclongappver2.Utils.Common.isConnectedToInternet;
+
 public class ActivitySearch extends AppCompatActivity implements RatingDialogListener {
 
     MaterialSearchBar searchBar;
@@ -49,9 +57,9 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
     LinearLayout recentLayout;
     RecyclerView recentList, suggestList,searchList;
     DrinkAdapter drinkAdapter;
-    RecentDrinkAdapter recentDrinkAdapter;
     NestedScrollView nestedScrollView;
     View view;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     IPhucLongAPI mService;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -62,9 +70,10 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
         setContentView(R.layout.activity_search);
 
         mService = Common.getAPI();
+        initDB();
 
         //2: đang trong activty search ko cần update badge cart
-        Common.checkInSearchActivity = 2;
+        Common.checkInSearchActivity = 1;
 
         view = findViewById(R.id.line_search);
         btn_back = findViewById(R.id.btn_back_search);
@@ -75,6 +84,11 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
         suggestList = findViewById(R.id.suggest_list);
         searchList = findViewById(R.id.search_drink_list);
         nestedScrollView = findViewById(R.id.nestedscrollview);
+        swipeRefreshLayout = findViewById(R.id.swipe_layout_search);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_blue_dark ,
+                android.R.color.holo_orange_dark);
 
         suggestList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         suggestList.setHasFixedSize(true);
@@ -87,15 +101,51 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
         searchList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         searchList.setHasFixedSize(true);
 
-        if(Common.suggestDrinkRepository.countSuggestDrinkItem() != 0){
-            recentLayout.setVisibility(View.VISIBLE);
-            view.setVisibility(View.VISIBLE);
-            loadRecentDrinks();
-        }
-        else{
-            recentLayout.setVisibility(View.GONE);
-            view.setVisibility(View.GONE);
-        }
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Common.isConnectedToInternet(getBaseContext())) {
+
+                    if (Common.suggestDrinkRepository.countSuggestDrinkItem() != 0) {
+                        recentLayout.setVisibility(View.VISIBLE);
+                        view.setVisibility(View.VISIBLE);
+                        loadRecentDrinks();
+                    } else {
+                        recentLayout.setVisibility(View.GONE);
+                        view.setVisibility(View.GONE);
+                    }
+                    loadSuggestList();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else{
+                    Toast.makeText(ActivitySearch.this, "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if(Common.isConnectedToInternet(getBaseContext())) {
+
+                    if (Common.suggestDrinkRepository.countSuggestDrinkItem() != 0) {
+                        recentLayout.setVisibility(View.VISIBLE);
+                        view.setVisibility(View.VISIBLE);
+                        loadRecentDrinks();
+                    } else {
+                        recentLayout.setVisibility(View.GONE);
+                        view.setVisibility(View.GONE);
+                    }
+                    loadSuggestList();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else{
+                    Toast.makeText(ActivitySearch.this, "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +159,7 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
             @Override
             public void onSearchStateChanged(boolean enabled) {
                 if(!enabled) {
+                    Common.checkInSearchActivity = 1;
                     relativeLayout.setVisibility(View.VISIBLE);
                     searchList.setVisibility(View.GONE);
                     nestedScrollView.setVisibility(View.VISIBLE);
@@ -140,9 +191,15 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
                 if(count != 0) {
                     nestedScrollView.setVisibility(View.GONE);
                     searchList.setVisibility(View.VISIBLE);
-                    startSearch(s);
+                    if(Common.isConnectedToInternet(getBaseContext())) {
+                        startSearch(s);
+                    }
+                    else{
+                        Toast.makeText(ActivitySearch.this,"Kiểm tra kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else{
+                    Common.checkInSearchActivity = 1;
                     searchList.setVisibility(View.GONE);
                     nestedScrollView.setVisibility(View.VISIBLE);
                 }
@@ -153,7 +210,10 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
 
             }
         });
-        loadSuggestList();
+    }
+
+    private void initDB() {
+        Common.suggestDrinkRepository = SuggestDrinkRepository.getInstance(SuggestDrinkDataSource.getInstance(Common.drinkroomDatabase.suggestDrinkDAO()));
     }
 
     private void loadRecentDrinks() {
@@ -175,17 +235,19 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
     }
 
     private void startSearch(CharSequence s) {
-        Common.checkInSearchActivity = 1;
-        compositeDisposable.add(mService.getDrinkByName(s.toString())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Drink>>() {
-                    @Override
-                    public void accept(List<Drink> drinks) throws Exception {
-                        loadSearchDrinks(drinks);
-                    }
-                })
-        );
+        Common.checkInSearchActivity = 2;
+        if(Common.isConnectedToInternet(ActivitySearch.this)) {
+            compositeDisposable.add(mService.getDrinkByName(s.toString())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<Drink>>() {
+                        @Override
+                        public void accept(List<Drink> drinks) throws Exception {
+                            loadSearchDrinks(drinks);
+                        }
+                    })
+            );
+        }
     }
 
     private void loadSearchDrinks(List<Drink> drinks) {
@@ -236,24 +298,30 @@ public class ActivitySearch extends AppCompatActivity implements RatingDialogLis
         rate.setComment(s);
         Date date = new Date();
         rate.setDate(DateFormat.getDateInstance(DateFormat.MEDIUM).format(date));
-        mService.setRating(Common.CurrentUser.getPhone(),rate.getDrinkID(),rate.getRate(),rate.getComment(),rate.getDate())
-                .enqueue(new Callback<Rating>() {
-                    @Override
-                    public void onResponse(Call<Rating> call, Response<Rating> response) {
-                        Rating rating = response.body();
-                        if(TextUtils.isEmpty(rating.getError_msg())) {
-                            progressDialog.dismiss();
-                            Toast.makeText(ActivitySearch.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
+        if(Common.isConnectedToInternet(getBaseContext())) {
+            mService.setRating(Common.CurrentUser.getPhone(), rate.getDrinkID(), rate.getRate(), rate.getComment(), rate.getDate())
+                    .enqueue(new Callback<Rating>() {
+                        @Override
+                        public void onResponse(Call<Rating> call, Response<Rating> response) {
+                            Rating rating = response.body();
+                            if (TextUtils.isEmpty(rating.getError_msg())) {
+                                progressDialog.dismiss();
+                                Toast.makeText(ActivitySearch.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Rating> call, Throwable t) {
-                        progressDialog.dismiss();
-                        Log.d("EEEE",t.getMessage());
-                        Toast.makeText(ActivitySearch.this,"Lỗi bất ngờ!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Rating> call, Throwable t) {
+                            progressDialog.dismiss();
+                            Log.d("EEEE", t.getMessage());
+                            Toast.makeText(ActivitySearch.this, "Lỗi bất ngờ!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else{
+            progressDialog.dismiss();
+            Toast.makeText(getBaseContext(),"Kiểm tra kết nối mạng!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

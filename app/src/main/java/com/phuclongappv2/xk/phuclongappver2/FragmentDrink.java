@@ -1,22 +1,32 @@
 package com.phuclongappv2.xk.phuclongappver2;
 
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.phuclongappv2.xk.phuclongappver2.Adapter.DrinkAdapter;
 import com.phuclongappv2.xk.phuclongappver2.Model.Drink;
 import com.phuclongappv2.xk.phuclongappver2.Retrofit.IPhucLongAPI;
 import com.phuclongappv2.xk.phuclongappver2.Utils.Common;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -32,7 +42,6 @@ import io.reactivex.schedulers.Schedulers;
 public class FragmentDrink extends Fragment {
 
     RecyclerView list_drink;
-    CollapsingToolbarLayout collapsingToolbarLayout;
 
     //Adapter
     DrinkAdapter adapter;
@@ -43,6 +52,8 @@ public class FragmentDrink extends Fragment {
     Toolbar toolbar;
 
     IPhucLongAPI mService;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -67,7 +78,7 @@ public class FragmentDrink extends Fragment {
 
         mService = Common.getAPI();
 
-        toolbar = view.findViewById(R.id.tool_bar_drink_menu);
+        toolbar = view.findViewById(R.id.tool_bar_drink);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,19 +90,46 @@ public class FragmentDrink extends Fragment {
         list_drink.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
         list_drink.setHasFixedSize(true);
 
-        collapsingToolbarLayout = view.findViewById(R.id.collapsing);
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
         if(getArguments() != null){
             id_cate = getArguments().getString("CategoryId");
             name_cate = getArguments().getString("CategoryName");
         }
         if(!id_cate.isEmpty() && id_cate != null){
-            collapsingToolbarLayout.setTitle(name_cate);
+            toolbar.setTitle(name_cate);
         }
 
-        loadDrink(id_cate);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_layout_drink);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_blue_dark ,
+                android.R.color.holo_orange_dark);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Common.isConnectedToInternet(getActivity())) {
+                    loadDrink(id_cate);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if(Common.isConnectedToInternet(getActivity())) {
+                    loadDrink(id_cate);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     public void loadDrink(String id_cate) {
@@ -101,7 +139,9 @@ public class FragmentDrink extends Fragment {
                 .subscribe(new Consumer<List<Drink>>() {
                     @Override
                     public void accept(List<Drink> drinks) throws Exception {
-                        displayDrink(drinks);
+                        if(drinks.size() != 0) {
+                            displayDrink(drinks);
+                        }
                     }
                 }));
     }

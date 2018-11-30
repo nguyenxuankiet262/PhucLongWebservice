@@ -25,4 +25,14 @@ public class Cart {
     public int cPriceItem;
     @ColumnInfo(name = "status")
     public String cStatus;
+    @ColumnInfo(name = "sugar")
+    public String cSugar;
+    @ColumnInfo(name = "ice")
+    public String cIce;
+    @ColumnInfo(name = "topping")
+    public String cTopping;
+    @ColumnInfo(name = "comment")
+    public String cComment;
+    @ColumnInfo(name = "pricetopping")
+    public int cPriceTopping;
 }

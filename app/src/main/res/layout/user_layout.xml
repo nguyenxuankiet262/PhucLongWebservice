@@ -225,78 +225,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:background="@color/colorSearchBar"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PAYMENT"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorBlack"
-                    android:textStyle="bold"
-                    android:layout_marginTop="20dp"
-                    />
-                <LinearLayout
-                    android:id="@+id/payment_paypal"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="Paypal"
-                        android:drawablePadding="5dp"
-                        android:textSize="15sp"
-                        android:textColor="@color/colorBlack"
-                        android:drawableLeft="@drawable/icon_paypal_green"/>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:layout_centerInParent="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-                            />
-                    </RelativeLayout>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorSearchBar"/>
-                <LinearLayout
-                    android:id="@+id/payment_momo"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="Credit card"
-                        android:drawablePadding="5dp"
-                        android:textSize="15sp"
-                        android:textColor="@color/colorBlack"
-                        android:drawableLeft="@drawable/ic_credit_card_green_24dp"/>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:layout_centerInParent="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-                            />
-                    </RelativeLayout>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorSearchBar"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -324,6 +252,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <Switch
+
                             android:id="@+id/btn_noti"
                             android:layout_alignParentEnd="true"
                             android:layout_centerInParent="true"

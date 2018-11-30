@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,6 +43,8 @@ public class FragmentHistoryDrink extends Fragment {
     RelativeLayout empty_layout;
     RecyclerView recyclerView;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     IPhucLongAPI mService;
 
@@ -57,7 +60,6 @@ public class FragmentHistoryDrink extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-        Common.checkHistory = 1;
     }
 
 
@@ -83,10 +85,41 @@ public class FragmentHistoryDrink extends Fragment {
         Log.d("EEEA",mPage+"");
 
         recyclerView.setLayoutManager(mLayoutManager);
-        if(Common.CurrentUser != null) {
-            loadHistory(mPage);
-        }
-
+        swipeRefreshLayout = view.findViewById(R.id.swipe_layout_history);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_blue_dark ,
+                android.R.color.holo_orange_dark);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Common.isConnectedToInternet(getActivity())) {
+                    if(Common.CurrentUser != null) {
+                        loadHistory(mPage);
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if(Common.isConnectedToInternet(getActivity())) {
+                    if(Common.CurrentUser != null) {
+                        loadHistory(mPage);
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     private void loadHistory(int mPage) {

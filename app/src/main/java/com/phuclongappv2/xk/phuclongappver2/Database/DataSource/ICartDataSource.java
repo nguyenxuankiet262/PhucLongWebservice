@@ -8,7 +8,7 @@ import io.reactivex.Flowable;
 
 public interface ICartDataSource {
     int isCart(int itemId);
-    Flowable<List<Cart>> getCartItems();
+    List<Cart> getCartItems();
     List<Cart> getCartById(int cartItemID);
     List<Cart> getCartByUserId(String userID);
     int countCartItem();

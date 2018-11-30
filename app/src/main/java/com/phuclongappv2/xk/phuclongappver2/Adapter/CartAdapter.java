@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         }
         total.setText(NumberFormat.getNumberInstance(Locale.US).format(sum) + " VNĐ");
 
+        holder.sugar_cart.setText("Sugar: " + cartList.get(position).cSugar);
+        holder.ice_cart.setText("Ice: " + cartList.get(position).cIce);
+        if(!TextUtils.isEmpty(cartList.get(position).cTopping)){
+            String[] parts = cartList.get(position).cTopping.split("\n");
+            //Toast.makeText(context,parts[0],Toast.LENGTH_SHORT).show();
+            for(int i = 0; i < parts.length; i++){
+                if(parts[i].equals("Milk cream")){
+                    holder.milk_cream.setVisibility(View.VISIBLE);
+                }
+                else if(parts[i].equals("White Pearl")){
+                    holder.white_pearl.setVisibility(View.VISIBLE);
+                }
+                else if(parts[i].equals("Black Pearl")){
+                    holder.black_pearl.setVisibility(View.VISIBLE);
+                }
+                else if(parts[i].equals("Red Beans")){
+                    holder.red_bean.setVisibility(View.VISIBLE);
+                }
+                else if(parts[i].equals("Seeds")){
+                    holder.seeds.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
         //Khởi tạo Image_cold của Cart
         if(cartList.get(position).cStatus.equals("cold")) {
             Picasso.with(context).load(cartList.get(position).cImageCold).into(holder.image_cart);
@@ -92,11 +117,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         holder.quanity_cart.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
-                Log.d("TTT","Change");
                 int price;
-                price = cartList.get(position).cPriceItem * Integer.parseInt(holder.quanity_cart.getNumber());
-
-                Log.d("TTT",NumberFormat.getNumberInstance(Locale.US).format(price) + " VNĐ");
+                price = (cartList.get(position).cPriceItem + cartList.get(position).cPriceTopping) * Integer.parseInt(holder.quanity_cart.getNumber());
 
                 holder.price_cart.setText(NumberFormat.getNumberInstance(Locale.US).format(price) + " VNĐ");
 

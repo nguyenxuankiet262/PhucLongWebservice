@@ -1,19 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_more"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_more"
     tools:context=".FragmentMore">
 
-    <include layout="@layout/user_layout"
-        android:id="@+id/user_layout">
-    </include>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout_more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/login_layout"
-        android:id="@+id/login_layout">
-    </include>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <include layout="@layout/tool_bar_layout"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorLine"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <include
+                android:id="@+id/user_layout"
+                layout="@layout/user_layout"></include>
+
+            <include
+                android:id="@+id/login_layout"
+                layout="@layout/login_layout"></include>
+        </RelativeLayout>
+    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

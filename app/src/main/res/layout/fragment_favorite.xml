@@ -6,27 +6,53 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     tools:context=".FragmentFavorite">
-    <include layout="@layout/empty_fav_layout"
-        android:id="@+id/empty_fav_layout">
-    </include>
-    <android.support.design.widget.CoordinatorLayout
+    <include
+        android:id="@+id/empty_fav_layout"
+        layout="@layout/empty_fav_layout"/>
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/myCoordinatorLayout">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_favorite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:scrollbars="vertical" />
-    </android.support.design.widget.CoordinatorLayout>
+        android:id="@+id/swipe_layout_favorite">
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/FAB_favorite"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/all_icon_24"/>
-    <include layout="@layout/item_fab_layout"/>
+        <include layout="@layout/tool_bar_layout"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorLine"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.CoordinatorLayout
+                android:id="@+id/myCoordinatorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_favorite"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+                    android:scrollbars="vertical" />
+            </android.support.design.widget.CoordinatorLayout>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/FAB_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="15dp"
+                android:src="@drawable/all_icon_24" />
+            <include layout="@layout/item_fab_layout"/>
+        </RelativeLayout>
+    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

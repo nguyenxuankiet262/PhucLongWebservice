@@ -28,7 +28,7 @@ public class CartDataSource implements ICartDataSource {
     }
 
     @Override
-    public Flowable<List<Cart>> getCartItems() {
+    public List<Cart> getCartItems() {
         return cartDAO.getCartItems();
     }
 

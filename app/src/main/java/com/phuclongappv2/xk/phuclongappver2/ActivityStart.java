@@ -1,12 +1,17 @@
 package com.phuclongappv2.xk.phuclongappver2;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,9 +39,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.phuclongappv2.xk.phuclongappver2.Utils.Common.isConnectedToInternet;
+
 public class ActivityStart extends AppCompatActivity {
     private ImageView logoView;
     private Animation anim_alpha;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     IPhucLongAPI mService;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -46,9 +54,10 @@ public class ActivityStart extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mService = Common.getAPI();
-        checkCurrentUser();
         logoView = (ImageView) findViewById(R.id.logo_Image);
         anim_alpha = AnimationUtils.loadAnimation(this,R.anim.anim_alpha);
+        swipeRefreshLayout = findViewById(R.id.swipe_layout_start);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, android.R.color.holo_green_dark, android.R.color.holo_blue_dark , android.R.color.holo_orange_dark);
         anim_alpha.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -57,7 +66,50 @@ public class ActivityStart extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                loadStoreList();
+                if(isConnectedToInternet(getBaseContext())) {
+                    checkCurrentUser();
+                }
+                else{
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(ActivityStart.this);
+                    View itemView = LayoutInflater.from(ActivityStart.this).inflate(R.layout.popup_no_internet_layout, null);
+                    Button btn_try_again = itemView.findViewById(R.id.btn_try_again);
+                    ImageView btn_close = itemView.findViewById(R.id.btn_close);
+                    builder.setView(itemView);
+                    final AlertDialog alertDialog = builder.show();
+                    btn_close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    btn_try_again.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(isConnectedToInternet(ActivityStart.this)){
+                                checkCurrentUser();
+                                alertDialog.dismiss();
+                            }
+                            else{
+                                Toast.makeText(ActivityStart.this, "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            if(isConnectedToInternet(ActivityStart.this)){
+                                checkCurrentUser();
+                                alertDialog.dismiss();
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                            else{
+                                Toast.makeText(ActivityStart.this, "Không thể kết nối mạng!", Toast.LENGTH_SHORT).show();
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -100,8 +152,16 @@ public class ActivityStart extends AppCompatActivity {
                             mService.getUser(account.getPhoneNumber().toString()).enqueue(new Callback<User>() {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
-                                    Common.CurrentUser = response.body();
-                                    updateTokenToServer();
+                                    if(response.body().getActive() == 1) {
+                                        Common.CurrentUser = response.body();
+                                        updateTokenToServer();
+                                        loadStoreList();
+                                    }
+                                    else{
+                                        Common.CurrentUser = null;
+                                        AccountKit.logOut();
+                                        loadStoreList();
+                                    }
                                 }
 
                                 @Override
@@ -124,6 +184,9 @@ public class ActivityStart extends AppCompatActivity {
 
                 }
             });
+        }
+        else{
+            loadStoreList();
         }
     }
 

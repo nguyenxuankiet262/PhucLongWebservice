@@ -48,7 +48,7 @@
         app:useCompatPadding="true"
         />
     <android.support.design.widget.FloatingActionButton
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorPrimaryTransparent"
         android:id="@+id/btn_rating"
         android:src="@drawable/ic_star_white_24dp"
         android:layout_width="wrap_content"
@@ -59,7 +59,6 @@
         app:layout_anchorGravity="bottom|left|end"
         app:useCompatPadding="true"
         />
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedscrollview"
         android:clipToPadding="false"
@@ -109,7 +108,6 @@
                             android:padding="12dp"
                             android:text="40.000 VND"
                             android:textSize="16sp" />
-
                         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                             android:id="@+id/elegant_btn"
                             android:layout_width="100dp"
@@ -192,6 +190,11 @@
                         android:theme="@style/RatingBar"
                         style="?android:attr/ratingBarStyleSmall"
                         />
+                    <View
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorDesperate"/>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_comment"
                         android:layout_width="match_parent"

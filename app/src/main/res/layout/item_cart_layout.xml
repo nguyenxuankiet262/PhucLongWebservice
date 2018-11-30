@@ -41,84 +41,179 @@
         <LinearLayout
             android:id="@+id/view_foreground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:background="@color/colorWhite"
-            android:orientation="horizontal"
-            >
-            <ImageView
-                android:id="@+id/image_cart"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/name_cart"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:id="@+id/image_cart"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Trà Gừng"
-                    android:textSize="16sp"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/name_cart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Trà Gừng"
+                        android:textSize="16sp"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/status_hot_cart"
+                            android:orientation="vertical">
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Hot"
-                                android:textSize="15sp" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/status_hot_cart"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Hot"
+                                    android:textSize="15sp" />
+
+                                <TextView
+                                    android:id="@+id/status_cold_cart"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:text="Cold"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
 
                             <TextView
-                                android:id="@+id/status_cold_cart"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/price_cart"
+                                android:layout_width="140dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:text="Cold"
-                                android:textSize="15sp" />
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+                                android:text="400,000 VNĐ"
+                                />
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/price_cart"
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:text="400,000 VNĐ"
-                            />
+                        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                            android:id="@+id/quanity_cart"
+                            android:layout_width="match_parent"
+                            android:layout_height="29dp"
+                            app:finalNumber="10"
+                            app:initialNumber="1"
+                            android:layout_marginRight="10dp">
+
+                        </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
                     </LinearLayout>
-
-                    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                        android:id="@+id/quanity_cart"
-                        android:layout_width="match_parent"
-                        android:layout_height="29dp"
-                        app:finalNumber="10"
-                        app:initialNumber="1"
-                        android:layout_marginRight="10dp">
-
-                    </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
-
                 </LinearLayout>
-
-
             </LinearLayout>
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:paddingLeft="10dp"
+                    android:textAlignment="center"
+                    android:id="@+id/sugar_cart"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sugar: 100%"
+                    android:drawableLeft="@drawable/ic_local_cafe_black_21dp"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp"
+                    />
+                <TextView
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:id="@+id/ice_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ice: 100%"
+                    android:drawableLeft="@drawable/ic_local_cafe_black_21dp"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp"
+                    />
+            </LinearLayout>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/milk_cream_topping"
+                android:paddingLeft="10dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Milk Cream"
+                android:drawableLeft="@drawable/ic_add_circle_black_21dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/seeds_topping"
+                android:paddingLeft="10dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seeds"
+                android:drawableLeft="@drawable/ic_add_circle_black_21dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/white_pearl_topping"
+                android:paddingLeft="10dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="White Pearl"
+                android:drawableLeft="@drawable/ic_add_circle_black_21dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/black_pearl_topping"
+                android:paddingLeft="10dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Black Pearl"
+                android:drawableLeft="@drawable/ic_add_circle_black_21dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/red_beans_topping"
+                android:paddingLeft="10dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Red Bean"
+                android:drawableLeft="@drawable/ic_add_circle_black_21dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                />
 
         </LinearLayout>
+
+
     </FrameLayout>
 
 

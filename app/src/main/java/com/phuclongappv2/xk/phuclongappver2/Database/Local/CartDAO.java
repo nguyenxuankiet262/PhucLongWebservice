@@ -18,7 +18,7 @@ public interface CartDAO {
     int isCart(int itemId);
 
     @Query("SELECT * FROM Cart")
-    Flowable<List<Cart>> getCartItems();
+    List<Cart> getCartItems();
 
     @Query("SELECT * FROM Cart WHERE id = :cartItemID")
     List<Cart> getCartById(int cartItemID);

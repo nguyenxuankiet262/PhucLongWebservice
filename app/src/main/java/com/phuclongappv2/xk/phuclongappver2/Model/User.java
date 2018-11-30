@@ -6,19 +6,29 @@ public class User {
     String address;
     int noti_history;
     int noti_news;
+    int active;
     String error_msg;
 
     public User() {
 
     }
 
-    public User(String phone, String name, String address, int noti_history, int noti_news, String error_msg) {
+    public User(String phone, String name, String address, int noti_history, int noti_news, int active, String error_msg) {
         this.phone = phone;
         this.name = name;
         this.address = address;
         this.noti_history = noti_history;
         this.noti_news = noti_news;
+        this.active = active;
         this.error_msg = error_msg;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 
     public int getNoti_history() {
