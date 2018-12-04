@@ -363,6 +363,7 @@ public class FragmentMore extends Fragment {
                         if(Common.isConnectedToInternet(getActivity())) {
                             Common.CurrentUser = null;
                             AccountKit.logOut();
+                            ((ActivityMain) getActivity()).updateNotificationHomeIcon();
                             final AlertDialog alertDialog = new SpotsDialog.Builder().setContext(getActivity()).build();
                             alertDialog.setMessage("Please waiting...");
                             alertDialog.show();
@@ -371,7 +372,7 @@ public class FragmentMore extends Fragment {
                                 public void run() {
                                     alertDialog.dismiss();
                                     Toast.makeText(getActivity(), "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
-                                    getActivity().recreate();
+                                    login_layout.setVisibility(View.VISIBLE);
                                 }
                             }, 2000);
                         }
@@ -477,21 +478,6 @@ public class FragmentMore extends Fragment {
         }
     }
 
-    private void loadInfo() {
-        if (!TextUtils.isEmpty(Common.CurrentUser.getName()) && !TextUtils.isEmpty(Common.CurrentUser.getAddress()))
-            name_user.setText(Common.CurrentUser.getName());
-        address_user.setText(Common.CurrentUser.getAddress());
-    }
-
-    public void updateBadge() {
-        if (notificationBadge == null) return;
-        if (TextUtils.isEmpty(Common.CurrentUser.getName()) && TextUtils.isEmpty(Common.CurrentUser.getAddress())) {
-            notificationBadge.setText("2");
-        } else {
-            notificationBadge.setVisibility(View.GONE);
-        }
-    }
-
     public void startLoginPage(LoginType loginType) {
         Intent intent = new Intent(getActivity(), AccountKitActivity.class);
         AccountKitConfiguration.AccountKitConfigurationBuilder builder =
@@ -542,7 +528,8 @@ public class FragmentMore extends Fragment {
                                                             Toast.makeText(getActivity(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                                                             login_layout.setVisibility(View.GONE);
                                                         }
-                                                    },2000);
+                                                    }, 2000);
+
                                                 }
                                                 else{
                                                     alertDialog.dismiss();
@@ -566,9 +553,9 @@ public class FragmentMore extends Fragment {
                                             public void run() {
                                                 alertDialog.dismiss();
                                                 Toast.makeText(getActivity(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                                                getActivity().recreate();
+                                                login_layout.setVisibility(View.GONE);
                                             }
-                                        },2000);
+                                        }, 2000);
                                     }
                                 }
 
@@ -632,15 +619,22 @@ public class FragmentMore extends Fragment {
             }
         });
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.icon_search:
-                Intent intent = new Intent(getActivity(),ActivitySearch.class);
-                startActivity(intent);
-                break;
+
+    private void loadInfo() {
+        if (!TextUtils.isEmpty(Common.CurrentUser.getName()) && !TextUtils.isEmpty(Common.CurrentUser.getAddress()))
+            name_user.setText(Common.CurrentUser.getName());
+        address_user.setText(Common.CurrentUser.getAddress());
+    }
+
+    public void updateBadge() {
+        if (notificationBadge == null) return;
+        if(Common.CurrentUser != null) {
+            if (TextUtils.isEmpty(Common.CurrentUser.getName()) && TextUtils.isEmpty(Common.CurrentUser.getAddress())) {
+                notificationBadge.setText("2");
+            } else {
+                notificationBadge.setVisibility(View.GONE);
+            }
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

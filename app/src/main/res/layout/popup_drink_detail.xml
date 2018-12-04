@@ -21,7 +21,6 @@
         android:fitsSystemWindows="true"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:contentScrim="@color/colorPrimary"
-        app:expandedTitleTextAppearance="@color/colorWhitetoTransparent"
 
         >
         <ImageView
@@ -48,7 +47,7 @@
         app:useCompatPadding="true"
         />
     <android.support.design.widget.FloatingActionButton
-        app:backgroundTint="@color/colorPrimaryTransparent"
+        app:backgroundTint="@color/colorSearchBar"
         android:id="@+id/btn_rating"
         android:src="@drawable/ic_star_white_24dp"
         android:layout_width="wrap_content"

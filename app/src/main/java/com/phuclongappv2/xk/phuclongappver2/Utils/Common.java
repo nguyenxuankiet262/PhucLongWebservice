@@ -37,6 +37,8 @@ import java.util.Map;
 public class Common {
     public static final String BASE_URL = "https://phuclongvn.000webhostapp.com/";
     public static final String API_TOKEN_URL = "https://phuclongvn.000webhostapp.com/braintree/main.php";
+    //public static final String BASE_URL = "http://10.0.2.2/phuclong/";
+    //public static final String API_TOKEN_URL = "http://10.0.2.2/phuclong/braintree/main.php";
     public static final String FCM_URL = "https://fcm.googleapis.com/";
 
     public static User CurrentUser = null;
