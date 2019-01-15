@@ -14,7 +14,7 @@ import io.reactivex.Flowable;
 
 @Dao
 public interface CartDAO {
-    @Query("SELECT EXISTS(SELECT 1 FROM Cart WHERE id=:itemId)")
+    @Query("SELECT EXISTS(SELECT 1 FROM Cart WHERE idDrink=:itemId)")
     int isCart(int itemId);
 
     @Query("SELECT * FROM Cart")

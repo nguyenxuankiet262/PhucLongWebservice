@@ -194,6 +194,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View v, final int position) {
+                Log.d("EEE", drinkList.get(position).getID() +"");
                 if(Common.isConnectedToInternet(context)) {
                     Common.drinkID = drinkList.get(position).getID();
                     if (Common.checkInSearchActivity == 2) {
@@ -468,6 +469,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                                     if (Common.CurrentUser != null) {
                                         cartItem.uId = Common.CurrentUser.getPhone();
                                     }
+                                    cartItem.cIdDrink = drinkList.get(position).getID();
                                     cartItem.cName = drinkList.get(position).getName();
                                     cartItem.cQuanity = Integer.parseInt(extra_elegant.getNumber());
                                     cartItem.cPrice = prices;
@@ -482,7 +484,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                                     cartItem.cPriceTopping = topping;
                                     //Add to DB
                                     Common.cartRepository.insertCart(cartItem);
-                                    Toast.makeText(context, "Đã thêm " + numberButton.getNumber() + " " + drinkList.get(position).getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Đã thêm " + extra_elegant.getNumber() + " " + drinkList.get(position).getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
                                     if (Common.checkInSearchActivity == 0) {
                                         Log.d("EEE","OK");
                                         updateNoti();

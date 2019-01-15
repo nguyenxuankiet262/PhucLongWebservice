@@ -9,6 +9,8 @@ public class Cart {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     public int cId;
+    @ColumnInfo(name = "idDrink")
+    public int cIdDrink;
     @ColumnInfo(name = "idUser")
     public String uId;
     @ColumnInfo(name = "name")

@@ -171,7 +171,7 @@ public class FragmentMore extends Fragment {
         btn_open_info = view.findViewById(R.id.btn_open_info);
         phone_number = view.findViewById(R.id.phone_number);
         btn_noti = view.findViewById(R.id.btn_noti);
-        notificationBadge = view.findViewById(R.id.badge);
+        notificationBadge = view.findViewById(R.id.badge_more);
         newBadge = view.findViewById(R.id.new_layout);
 
         detail_info_layout.setVisibility(View.GONE);
@@ -517,10 +517,17 @@ public class FragmentMore extends Fragment {
                                                 if(response.body().getActive() == 1){
                                                     Common.CurrentUser = response.body();
                                                     loadInfo();
-                                                    updateBadge();
+                                                    //updateBadge();
                                                     updateCartCount();
+                                                    updateHistory();
                                                     ((ActivityMain) getActivity()).updateNotificationHomeIcon();
                                                     updateTokenToServer();
+                                                    if(Common.CurrentUser.getNoti_news() == 0){
+                                                        btn_noti.setChecked(false);
+                                                    }
+                                                    else{
+                                                        btn_noti.setChecked(true);
+                                                    }
                                                     new Handler().postDelayed(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -544,8 +551,16 @@ public class FragmentMore extends Fragment {
                                         });
                                     } else {
                                         Common.CurrentUser = user;
+                                        if(Common.CurrentUser.getNoti_news() == 0){
+                                            btn_noti.setChecked(false);
+                                        }
+                                        else{
+                                            btn_noti.setChecked(true);
+                                        }
                                         loadInfo();
-                                        updateBadge();
+                                        //updateBadge();
+                                        updateCartCount();
+                                        updateHistory();
                                         ((ActivityMain) getActivity()).updateNotificationHomeIcon();
                                         updateTokenToServer();
                                         new Handler().postDelayed(new Runnable() {
@@ -624,15 +639,17 @@ public class FragmentMore extends Fragment {
         if (!TextUtils.isEmpty(Common.CurrentUser.getName()) && !TextUtils.isEmpty(Common.CurrentUser.getAddress()))
             name_user.setText(Common.CurrentUser.getName());
         address_user.setText(Common.CurrentUser.getAddress());
+        updateBadge();
     }
 
     public void updateBadge() {
-        if (notificationBadge == null) return;
         if(Common.CurrentUser != null) {
             if (TextUtils.isEmpty(Common.CurrentUser.getName()) && TextUtils.isEmpty(Common.CurrentUser.getAddress())) {
                 notificationBadge.setText("2");
+                Log.d("EEE", "1");
             } else {
                 notificationBadge.setVisibility(View.GONE);
+                Log.d("EEE", "2");
             }
         }
     }

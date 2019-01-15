@@ -541,6 +541,7 @@ public class ActivityCart extends AppCompatActivity implements RecyclerItemTouch
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 Token token = response.body();
+                Log.d("EEE",token.getToken());
                 Sender content = new Sender(token.getToken(),notification);
                 apiService.sendNoti(content).enqueue(new Callback<MyResponse>() {
                     @Override
@@ -548,6 +549,7 @@ public class ActivityCart extends AppCompatActivity implements RecyclerItemTouch
                         if(response.body().success == 1){
                             alertDialog.dismiss();
                             progressDialog.dismiss();
+
                             Toast.makeText(ActivityCart.this, "Đặt món thành công! Xin cám ơn quý khách", Toast.LENGTH_SHORT).show();
                             Common.cartRepository.emptyCart();
                             Common.CurrentUser.setNoti_history(1);
